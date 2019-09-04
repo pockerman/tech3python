@@ -3,6 +3,30 @@ Kalaman Filter implementation
 """
 
 import numpy as np
+import functools
+
+
+def check_in_matrices(matrix_names):
+    def check_matrix_name_decorator(f):
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+
+            if kwargs.get('name') not in matrix_names:
+                raise ValueError("Matrix name: " + kwargs.get('name') + " not in " + str(matrix_names))
+
+            return f(*args, **kwargs)
+        return wrapper
+    return check_matrix_name_decorator
+
+
+def check_not_none_matrix_decorator(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        if kwargs.get('mat') is None:
+            raise ValueError("Cannot set a matrix to None. Need a value")
+        return f(*args, **kwargs)
+    return wrapper
+
 
 class KFMatrixDescription:
     """
@@ -17,24 +41,19 @@ class KFMatrixDescription:
     def __init__(self):
         self._matrices = dict()
 
+    @check_in_matrices(NAMES)
+    @check_not_none_matrix_decorator
     def set_matrix(self, name, mat):
         """
         Set the KF matrix name to the given value
         """
-        if name not in KFMatrixDescription.NAMES:
-            raise ValueError("Matrix name: "+name+" not in "+str(KFMatrixDescription.NAMES))
-
-        if mat is None:
-            raise ValueError("Cannot set a matrix to None. Need a value")
-
         self._matrices[name] = mat
 
     def __setitem__(self, key, value):
         self.set_matrix(name=key, mat=value)
 
+    @check_in_matrices(NAMES)
     def get_matrix(self, name):
-        if name not in KFMatrixDescription.NAMES:
-            raise ValueError("Matrix name: "+name+" not in "+str(KFMatrixDescription.NAMES))
         return self._matrices[name]
 
     def __getitem__(self, item):
@@ -83,7 +102,7 @@ class KalamanFilter:
 
         # compute gain matrix
         K = self._mat_desc["K"]
-        K = P * H_T * S_inv;
+        K = P * H_T * S_inv
 
         innovation = z - H * self._state_vec
         self._state_vec += K * innovation

@@ -17,7 +17,7 @@ class KalmanFilterTest(unittest.TestCase):
     def test_invalid_matrix_name(self):
         kf_description = KFMatrixDescription()
         with self.assertRaises(ValueError) as context:
-            kf_description.set_matrix("INVALID_NAME", None)
+            kf_description.set_matrix(name="INVALID_NAME", mat=[0,1])
 
     """
     Test Scenario: Application attempts to set a matrix with a valid name as None
@@ -26,10 +26,7 @@ class KalmanFilterTest(unittest.TestCase):
     def test_none_matrix(self):
         kf_description = KFMatrixDescription()
         with self.assertRaises(ValueError) as context:
-            kf_description.set_matrix(KFMatrixDescription.NAMES[0], None)
-
-
-
+            kf_description.set_matrix(name=KFMatrixDescription.NAMES[0], mat=None)
 
 
 if __name__ == '__main__':
