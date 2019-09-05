@@ -3,71 +3,42 @@ Kalaman Filter implementation
 """
 
 import numpy as np
-import functools
+from base.basic_decorators import check_in_array
+from base.basic_decorators import check_not_none
+from .matrix_descriptor import MatrixDescription
 
 
-def check_in_matrices(matrix_names):
-    def check_matrix_name_decorator(f):
-        @functools.wraps(f)
-        def wrapper(*args, **kwargs):
-
-            if kwargs.get('name') not in matrix_names:
-                raise ValueError("Matrix name: " + kwargs.get('name') + " not in " + str(matrix_names))
-
-            return f(*args, **kwargs)
-        return wrapper
-    return check_matrix_name_decorator
-
-
-def check_not_none_matrix_decorator(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        if kwargs.get('mat') is None:
-            raise ValueError("Cannot set a matrix to None. Need a value")
-        return f(*args, **kwargs)
-    return wrapper
-
-
-class KFMatrixDescription:
+class KFMatrixDescription(MatrixDescription):
     """
     Matrix description for Kalman Filter class
     """
 
+    @classmethod
+    def get_names(cls):
+        return cls.NAMES
+
     """
-    Holds the names of the matrices used in the Kalaman Filter
+    Holds the names of the matrices used in the Kalman Filter
     """
     NAMES = ["A", "B", "H", "P", "K", "Q", "R"]
 
     def __init__(self):
-        self._matrices = dict()
+        MatrixDescription.__init__(self)
 
-    @check_in_matrices(NAMES)
-    @check_not_none_matrix_decorator
-    def set_matrix(self, name, mat):
+    @check_in_array(items=NAMES)
+    @check_not_none(msg="Cannot set a matrix to None. Need a value.")
+    def set_matrix(self, name, item):
         """
-        Set the KF matrix name to the given value
+        Set the Matrix with the given name to the given value
         """
-        self._matrices[name] = mat
+        self._matrices[name] = item
 
-    def __setitem__(self, key, value):
-        self.set_matrix(name=key, mat=value)
-
-    @check_in_matrices(NAMES)
+    @check_in_array(items=NAMES)
     def get_matrix(self, name):
         return self._matrices[name]
 
-    def __getitem__(self, item):
-        self.get_matrix(name=item)
 
-    def update(self, **input):
-        """
-        Performs any updates of the matrics if needed. Applications should
-        provide the actual implementation
-        """
-        pass
-
-
-class KalamanFilter:
+class KalmanFilter:
 
     """
     Implementation of Kalman Filtering
@@ -101,15 +72,14 @@ class KalamanFilter:
         S_inv = np.linalg.inv(S)
 
         # compute gain matrix
-        K = self._mat_desc["K"]
-        K = P * H_T * S_inv
+        self._mat_desc["K"] = P * H_T * S_inv
 
         innovation = z - H * self._state_vec
-        self._state_vec += K * innovation
+        self._state_vec += self._mat_desc["K"] * innovation
         I = np.identity(self._state_vec.shape)
 
         # update covariance matrix
-        P = (I - K * H) * P
+        P = (I - self._mat_desc["K"] * H) * P
 
     def iterate(self, u, z, **kwrags):
         """
