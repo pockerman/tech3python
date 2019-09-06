@@ -30,7 +30,7 @@ class EKFMatrixDescription(MatrixDescription):
     @check_not_none(msg="Cannot set a matrix to None. Need a value.")
     def set_matrix(self, name, mat):
         """
-        Set the KF matrix name to the given value
+        Set the EKF matrix name to the given value
         """
         self._matrices[name] = mat
 
