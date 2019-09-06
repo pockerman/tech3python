@@ -1,0 +1,8 @@
+{
+
+  "NUM_PARTICLES": 100,
+  "NUM_RESAMPLE_PARTICLES": 200,
+  "DT": 0.1,
+  "STEPS": 500,
+  "SHOW_ANIMATION", True
+}
