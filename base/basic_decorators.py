@@ -27,3 +27,14 @@ def check_not_none(msg: str):
             return f(*args, **kwargs)
         return wrapper
     return check_not_none_item_decorator
+
+
+def check_array_index(array):
+    def check_index_decorator(f):
+        def wrapper(*args, **kwargs):
+            if kwargs.get('idx') > len(array):
+                raise IndexError("Index: ", kwargs.get('idx'), " not in [0, ", len(array), ")" )
+            return f(*args, **kwargs)
+        return wrapper
+    return check_index_decorator
+
