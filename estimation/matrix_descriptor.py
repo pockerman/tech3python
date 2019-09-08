@@ -42,9 +42,46 @@ class MatrixDescription:
         pass
 
     def __getitem__(self, item):
-        self.get_matrix(name=item)
+
+        if item not in self.get_names():
+            raise IndexError("Invalid index: "+item+" not in "+str(self.get_names()))
+
+        return self.get_matrix(name=item)
 
     def __setitem__(self, key, value):
         self.set_matrix(name=key, mat=value)
+
+    def __len__(self):
+        return len(self.get_names())
+
+
+class MatrixDescriptionIterator:
+    """
+    Helper class to assist iteration over the matrices in
+    a MatrixDescriptor
+    """
+    def __init__(self, matrix_descriptor):
+
+        if isinstance(matrix_descriptor, MatrixDescription) == False:
+            raise ValueError("Only MatrixDescription and its subclasses should be used")
+
+        self._matrix_descriptor = matrix_descriptor
+        self._name_counter = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        if self._name_counter >= len(self._matrix_descriptor):
+            raise StopIteration
+
+        current_name = self._matrix_descriptor.get_names()[self._name_counter]
+        current_map = self._matrix_descriptor[current_name]
+        self._name_counter += 1
+
+        return current_name, current_map
+
+
 
 

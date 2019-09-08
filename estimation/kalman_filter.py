@@ -3,6 +3,8 @@ Kalaman Filter implementation
 """
 
 import numpy as np
+
+from .iterative_filter_base import IterativeFilterBase
 from base.basic_decorators import check_in_array
 from base.basic_decorators import check_not_none
 from .matrix_descriptor import MatrixDescription
@@ -18,7 +20,7 @@ class KFMatrixDescription(MatrixDescription):
         return cls.NAMES
 
     """
-    Holds the names of the matrices used in the Kalman Filter
+    Holds the names of the matrices used in the Kalman Filter class
     """
     NAMES = ["A", "B", "H", "P", "K", "Q", "R"]
 
@@ -38,15 +40,14 @@ class KFMatrixDescription(MatrixDescription):
         return self._matrices[name]
 
 
-class KalmanFilter:
+class KalmanFilter(IterativeFilterBase):
 
     """
     Implementation of Kalman Filtering
     """
 
     def __init__(self, state_vec, mat_desc):
-        self._state_vec = state_vec
-        self._state_vec_prev = self._state_vec
+        IterativeFilterBase.__init__(self, state_vec=state_vec)
         self._mat_desc = mat_desc
 
     def predict(self, u):
@@ -80,11 +81,12 @@ class KalmanFilter:
 
         # update covariance matrix
         P = (I - self._mat_desc["K"] * H) * P
+        self._mat_desc["P"] = P
 
-    def iterate(self, u, z, **kwrags):
+    def iterate(self, u, z, **kwargs):
         """
         Perform one iteration step for Kalman Filter
         """
         self.predict(u=u)
         self.update(z=z)
-        self._mat_desc.update(kwrags)
+        self._mat_desc.update(kwargs)
