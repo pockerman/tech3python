@@ -14,10 +14,10 @@ This is my Python playground...
 
 ### Statistics
 
-- <a href="#">Example 1</a>
-- <a href="#">Example 2</a>
-- <a href="#">Example 3</a>
-- <a href="#">Example 4</a>
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_1.py">Example 1</a>
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_2.py">Example 2</a>
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_3.py">Example 3</a>
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_4.py">Example 4</a>
 
 ### Estimation
 
