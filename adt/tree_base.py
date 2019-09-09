@@ -14,11 +14,22 @@ class TreeNode:
         self._parent = parent
         self._children = None
 
+        if self._parent is None:
+            self._level = 0
+        else:
+            self._level = self._parent.get_level() + 1
+
     def set_child(self, idx, item):
         self._children[idx] = item
 
+    def set_children(self, children):
+        self._children = children
+
     def n_children(self):
         return len(self._children)
+
+    def get_level(self):
+        return self._level
 
     def has_parent(self):
         """
@@ -47,20 +58,16 @@ class TreeBase(ADTBase):
         """
         return self._size == 0
 
-    def push(self, value):
-        """
-        Adds a new value in the ADT. Concrete classes specify
-        where the push occurs
-        """
-        sucess = self._insert_method.insert(root=self._root, value=value)
-
-        if sucess:
-            self._size += 1
-
-
     def get_root(self):
         """
         Returns the root node
         :return:
         """
         return self._root
+
+    def _make_root(self, node):
+        self._root = node
+        self._size += 1
+
+    def _get_insert_method(self):
+        return self._insert_method
