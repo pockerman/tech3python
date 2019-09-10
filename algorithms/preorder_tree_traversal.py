@@ -12,13 +12,20 @@ def preorder_traversal(root, predicate):
 
     if predicate(root):
         return root
-    
-    for c in root.children():
-        node = preorder_traversal(c , predicate)
 
-        if node is not None:
+    child = None
+    idx = -1
+
+    for c in range(root.n_children()):
+
+        child = root.get_child(c)
+
+        if predicate(child):
+            idx = c
             break
 
-    return node
+        child = preorder_traversal(child, predicate)
+
+    return root, child, idx
 
 

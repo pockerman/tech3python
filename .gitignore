@@ -4,3 +4,4 @@ estimation/__pycache__/
 tests/estimation/.cache/
 tests/adt/.cache/v/cache/lastfailed
 statistics/__pycache__/
+tests/algorithms/.cache/

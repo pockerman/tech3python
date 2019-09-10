@@ -13,19 +13,28 @@ class TreeNode:
         self._data = data
         self._parent = parent
         self._children = None
+        self._level = 0
 
-        if self._parent is None:
-            self._level = 0
-        else:
+        if self._parent is not None:
             self._level = self._parent.get_level() + 1
 
     def set_child(self, idx, item):
         self._children[idx] = item
 
+    def get_child(self, idx):
+        return self._children[idx]
+
     def set_children(self, children):
         self._children = children
 
+    def get_children(self):
+        if self._children is None:
+            raise AttributeError("Children is None")
+        return self._children
+
     def n_children(self):
+        if self._children is None:
+            return 0
         return len(self._children)
 
     def get_level(self):
