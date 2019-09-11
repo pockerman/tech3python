@@ -1,3 +1,7 @@
+"""
+Basic predicates for querying the state of the passed object
+in a uniform manner
+"""
 
 class IdentityPredicate:
 
