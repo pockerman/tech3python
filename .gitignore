@@ -5,3 +5,9 @@ tests/estimation/.cache/
 tests/adt/.cache/v/cache/lastfailed
 statistics/__pycache__/
 tests/algorithms/.cache/
+dynamics/__pycache__/*
+ode_integrators/__pycache__/*
+physics/__pycache__/*
+plot/__pycache__/*
+systems/__pycache__/*
+vehicle/__pycache__/*
