@@ -4,6 +4,9 @@ Motion model
 
 
 class MotionModel:
+    """
+    Vanilla motion model
+    """
 
     def __init__(self):
         pass

@@ -56,13 +56,40 @@ class ParticleFilter(IterativeFilterBase):
         self._measurement_model = measurement_model
         self._likelihood_model = likelihood_model
         self._mat_desc = mat_desc
-        self._weights = np.zeros(shape=(num_particles, 1), dtype='float')
+        self._particles = np.zeros(shape=(state_vec.shape[0], num_particles), dtype='float')
+        self._weights = np.zeros(shape=(1, num_particles), dtype='float')
         self._importance_weight_calculator=None
-        self._calculate_covariance = None
-
+        self._covariance_calculator = None
 
     def set_importance_weights_calculator(self, calculator):
+        """
+        Set the type responsible for calculating the weights
+        """
         self._importance_weight_calculator = calculator
+
+    def set_covariance_calculator(self, calculator):
+        """
+        Set the type responsible for calculating the covariance matrix
+        """
+        self._covariance_calculator = calculator
+
+    def get_particles(self):
+        """
+        Returns the particles list
+        """
+        return self._particles
+
+    def get_matrix(self, name):
+        """
+        Returns the matrix with the given name
+        """
+        return self._mat_desc.get_matrix(name=name)
+
+    def get_matrix_descriptor(self):
+        """
+        Returns the matrix descriptort object
+        """
+        return self._mat_desc
 
     def set_weights(self, weights):
         """
@@ -75,48 +102,67 @@ class ParticleFilter(IterativeFilterBase):
 
         self._weights = weights
 
+    def get_weights(self):
+        """
+        Returns the weights for the particles
+        """
+        return self._weights
+
     def normalize_weights(self, **kwargs):
         """
         Normalize the weights
         """
         self._weights = self._weights/sum(self._weights)
 
-    def calculate_importance_weight(self):
-        pass
+    def predict(self, **kwargs):
 
-    def calculate_covariance(self, **kwargs):
-        """
-        Calculates the covariance matrix P
-        """
-        pass
-
-    def predict(self, u, **kwargs):
+        u = kwargs['u']
 
         for pidx in range(self._num_particles):
             wp = self._weights[pidx]
 
             state_vec = self._motion_model(self.get_previous_state_vector(), self._mat_desc["F"], self._mat_desc["B"], u)
             kwargs['state'] = state_vec
-            wp = self.calculate_importance_weight(wp, **kwargs)
+            wp = self._importance_weight_calculator(wp, **kwargs)
 
-            px[:, pidx] = state_vec[:, 0]
-            pw[0, pidx] = wp
+            self._particles[:, pidx] = state_vec[:, 0]
+            self._weights[0, pidx] = wp
 
         self.normalize_weights(**kwargs)
 
-        state_vec = px.dot(pw.T)
-        self._mat_desc["P"] = self._calculate_covariance(state_vec, px, pw)
+        state_vec = self._particles.dot(self._weights.T)
+        self._mat_desc["P"] = self._covariance_calculator(state_vec, self._particles, self._weights)
 
-        self.calculate_covariance(**kwargs)
-
-    def update(self, z, **kwargs):
+    def update(self, **kwargs):
 
         """
         Update the estimate. Essentially performs the resampling step
+        meaning that a new set of particles and particle weights is generated
         """
-        pass
 
-    def iterate(self, u, z, **kwargs):
-        self.predict(u=u, **kwargs)
-        self.update(z=z, **kwargs)
+        Neff = 1.0 / (self._weights.dot(self._weights.T))[0, 0]  # Effective particle number
+        NP = self._num_particles
+        NTh = self._num_resample_particles
+
+        if Neff < NTh:
+            wcum = np.cumsum(self._weights)
+            base = np.cumsum(self._weights * 0.0 + 1 / NP) - 1 / NP
+            resampleid = base + np.random.rand(base.shape[0]) / NP
+
+            inds = []
+            ind = 0
+            for ip in range(NP):
+                while resampleid[ip] > wcum[ind]:
+                    ind += 1
+                inds.append(ind)
+
+            self._particles = self._particles[:, inds]
+            self._weights = np.zeros((1, NP)) + 1.0 / NP  # init weight
+
+    def iterate(self, **kwargs):
+        """
+        Perform own iteration over the steps fo PF
+        """
+        self.predict(**kwargs)
+        self.update(**kwargs)
         self._mat_desc.update(**kwargs)
