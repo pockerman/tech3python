@@ -5,6 +5,7 @@ import numpy as np
 
 
 class GaussianModel:
+
     """
     Gaussian distribution
     """
@@ -16,5 +17,5 @@ class GaussianModel:
     def __call__(self, *args, **kwargs):
 
         x=0.0
-        if len(args)>1: x = args[0]
-        return np.random.normal(loc=(x-self._mu), scale=self._sigma )
+        if len(args) > 1: x = args[0]
+        return np.random.normal(loc=(x-self._mu), scale=self._sigma)
