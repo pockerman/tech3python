@@ -1,16 +1,22 @@
 from .tree_base import TreeBase
 from .tree_base import TreeNode
+from predicates.basic_predicates import IsNonePredicate
 
 
 class BinaryTree(TreeBase):
+
+    """
+    Models a binary tree
+    """
 
     def __init__(self, insert_method):
         TreeBase.__init__(self, insert_method=insert_method)
 
     def push(self, value):
+
         """
-        Adds a new value in the ADT. Concrete classes specify
-        where the push occurs
+        Adds a new value in the Binary tree. Insertion is done according to the
+        insertion method specified at construction time
         """
 
         if self.get_root() is None:
@@ -19,7 +25,8 @@ class BinaryTree(TreeBase):
             self._make_root(node)
             return
 
-        sucess = self._insert_method.insert(root=self._root, value=value)
+        predicate = IsNonePredicate()
+        sucess = self._get_insert_method().insert(root=self._root, value=value, predicate=predicate)
 
         if sucess:
             self._size += 1
