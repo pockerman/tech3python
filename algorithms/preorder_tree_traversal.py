@@ -3,43 +3,41 @@ Preorder tree traversal algorithm
 """
 
 
-def preorder_tree_traversal(root, predicate):
-    """
-    Preorder traversal algorithm
-    """
-    if root is None:
-        raise ValueError("Root node is None")
+class PreorderTreeTraversal:
 
-    if predicate is None:
-        raise ValueError("Predicate is None")
+    @staticmethod
+    def traverse(root, predicate):
 
-    if predicate(root):
-        return root
+        """
+        Preorder traversal algorithm
+        """
+        if root is None:
+            raise ValueError("Root node is None")
 
-    child = None
-    idx = -1
+        if predicate is None:
+            raise ValueError("Predicate is None")
 
-    for c in range(root.n_children()):
+        if predicate(root):
+            return root
 
-        child = root.get_child(c)
+        child = None
+        idx = -1
 
-        if predicate(child):
-            idx = c
-            break
+        for c in range(root.n_children()):
 
-        root, child, _ = preorder_tree_traversal(child, predicate)
+            child = root.get_child(c)
 
-        if predicate(child):
-            idx = c
-            break
+            if predicate(child):
+                idx = c
+                break
 
-    return root, child, idx
+            root, child, _ = PreorderTreeTraversal.traverse(child, predicate)
 
+            if predicate(child):
+                idx = c
+                break
 
-class PreorderTraversal:
-
-    #def __init__(self):
-    #    pass
+        return root, child, idx
 
     @staticmethod
     def insert(root, value, predicate):
@@ -48,7 +46,7 @@ class PreorderTraversal:
         Insert the given value in the tree represented by the root.
         Insertion position is determined by the given predicate
         """
-        root, child, idx = preorder_tree_traversal(root, predicate)
+        root, child, idx = PreorderTreeTraversal.traverse(root, predicate)
 
         if child is None:
             root.create_and_set_child(idx, value)
