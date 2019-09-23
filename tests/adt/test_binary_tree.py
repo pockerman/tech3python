@@ -1,6 +1,6 @@
 import unittest
 from adt.binary_tree import BinaryTree
-from algorithms.preorder_tree_traversal import PreorderTraversal
+from algorithms.preorder_tree_traversal import PreorderTreeTraversal
 
 
 class BinaryTreeTest(unittest.TestCase):
@@ -12,7 +12,7 @@ class BinaryTreeTest(unittest.TestCase):
 
     def test_push_success_preorder_traversal(self):
 
-        bt = BinaryTree(insert_method=PreorderTraversal)
+        bt = BinaryTree(insert_method=PreorderTreeTraversal)
         self.assertEqual(len(bt), 0,
                          msg="Tree size is not 0")
 
