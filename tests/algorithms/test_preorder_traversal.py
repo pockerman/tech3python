@@ -3,7 +3,7 @@ Unit tests for preorder traversal algorithm
 """
 import unittest
 
-from algorithms.preorder_tree_traversal import preorder_tree_traversal
+from algorithms.preorder_tree_traversal import PreorderTreeTraversal
 from predicates.basic_predicates import IdentityPredicate
 from predicates.basic_predicates import IsNonePredicate
 from adt.tree_base import TreeNode
@@ -23,7 +23,7 @@ class PreorderTraversalTest(unittest.TestCase):
         node = None
         predicate = IdentityPredicate()
         with self.assertRaises(ValueError):
-            preorder_tree_traversal(root=node, predicate=predicate)
+            PreorderTreeTraversal.traverse(root=node, predicate=predicate)
 
     """
       Test Scenario: Application attempts to apply preorder traversal with no predicate
@@ -34,7 +34,7 @@ class PreorderTraversalTest(unittest.TestCase):
         node = TreeNode(data=0, parent=None)
         predicate = None
         with self.assertRaises(ValueError):
-            preorder_tree_traversal(root=node, predicate=predicate)
+            PreorderTreeTraversal.traverse(root=node, predicate=predicate)
 
     """
     Test Scenario: Application attempts to apply preorder traversal with a valid root and IsNonePredicate
@@ -45,8 +45,8 @@ class PreorderTraversalTest(unittest.TestCase):
         node = TreeNode(data=0, parent=None)
         node.set_children([None, None])
         predicate = IsNonePredicate()
-        root, found, idx = preorder_tree_traversal(root=node, predicate=predicate)
-        self.assertIsNone(found, "Could not find None child")
+        root, child, idx = PreorderTreeTraversal.traverse(root=node, predicate=predicate)
+        self.assertIsNone(child, "Could not find None child")
         self.assertEqual(idx, 0)
 
     """
@@ -60,10 +60,9 @@ class PreorderTraversalTest(unittest.TestCase):
         child1 = TreeNode(data=10, parent=node)
         node.set_children([child1, None])
         predicate = IsNonePredicate()
-        root, found, idx = preorder_tree_traversal(root=node, predicate=predicate)
-        self.assertIsNone(found, "Could not find None child")
-        self.assertEquals(idx, 1)
-
+        root, child, idx = PreorderTreeTraversal.traverse(root=node, predicate=predicate)
+        self.assertIsNone(child, "Could not find None child")
+        self.assertEqual(idx, 0)
 
 
 if __name__ == '__main__':
