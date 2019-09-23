@@ -5,6 +5,7 @@ import unittest
 
 from adt.tree_base import TreeBase
 
+
 class MockInsertMethod:
     def __init__(self):
         pass
@@ -14,6 +15,7 @@ class MockInsertMethod:
 
 
 class TreeBaseTest(unittest.TestCase):
+
     """
     Test Scenario: Application attempts to add a new value into the tree
     Expected Output: New item should be successfully inserted
