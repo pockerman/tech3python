@@ -18,6 +18,10 @@ class TreeNode:
         if self._parent is not None:
             self._level = self._parent.get_level() + 1
 
+    @property
+    def value(self):
+        return self._data
+
     def set_data(self, data):
 
         """
@@ -84,10 +88,29 @@ class TreeNode:
         if self._parent is not None:
             self._level = self._parent.get_level() + 1
 
+    def get_parent(self):
+
+        """
+        Returns the parent for this node
+        """
+
+        return self._parent
+
     def create_and_set_child(self, idx, item):
         node = TreeNode(data=item, parent=self)
         node.set_children(children=[None for i in range(self.n_children())])
         self.set_child(idx, node)
+
+    def which_child_am_i(self, child):
+
+        if id(child) == id(self):
+            return -1
+
+        for c in range(self.n_children()):
+            if id(self.get_child(c)) == id(child):
+                return c
+
+        return None
 
 
 class TreeBase(ADTBase):
