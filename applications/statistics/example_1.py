@@ -1,8 +1,7 @@
 """
-Statistics Example 1:
-
-Compute basic statistics using NumPy
-
+Category: Statistics
+ID: Example 1
+Description: Compute basic statistics using NumPy
 """
 
 import numpy as np

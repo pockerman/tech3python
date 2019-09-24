@@ -16,8 +16,8 @@ This is my Python playground...
 
 ### Statistics
 
-- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_1.py">Example 1</a>
-- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_2.py">Example 2</a>
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_1.py">Example 1</a>: Compute basic statistics using NumPy
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_2.py">Example 2</a>: Compute the mean, standard deviation and correlation of two variables
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_3.py">Example 3</a>: Vanilla bootstrap for the mean
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_4.py">Example 4</a>: Vanilla bootstrap for skewness
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_5.py">Example 5</a>: 1D Linear Regression 
