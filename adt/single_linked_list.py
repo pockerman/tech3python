@@ -128,22 +128,3 @@ class SinglyLinkedList(ADTBase):
                 data += ","
 
         return data
-
-
-
-
-
-
-
-    """
-    slist = SinglyLinkedList()
-    slist.add_head(value=3)
-
-    print(slist.head())
-
-    for i in range(10):
-        slist.add_head(i)
-
-    string = slist.__str__()
-    print(string)
-    """
