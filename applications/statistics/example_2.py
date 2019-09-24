@@ -1,9 +1,10 @@
-"""
-Statistics Example 2
-
-Compute the mean, standard deviation and correlation of two variables
 
 """
+Category: Statistics
+ID: Example 2
+Description: Compute the mean, standard deviation and correlation of two variables
+"""
+
 import numpy as np
 
 
