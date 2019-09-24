@@ -1,0 +1,252 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>estimation.particle_filter &#8212; tech3python 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for estimation.particle_filter</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Implementation of Particle Filtering</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">base.basic_decorators</span> <span class="k">import</span> <span class="n">check_in_array</span>
+<span class="kn">from</span> <span class="nn">base.basic_decorators</span> <span class="k">import</span> <span class="n">check_not_none</span>
+<span class="kn">from</span> <span class="nn">.matrix_descriptor</span> <span class="k">import</span> <span class="n">MatrixDescription</span>
+<span class="kn">from</span> <span class="nn">.iterative_filter_base</span> <span class="k">import</span> <span class="n">IterativeFilterBase</span>
+
+
+<div class="viewcode-block" id="PFMatrixDescription"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.PFMatrixDescription">[docs]</a><span class="k">class</span> <span class="nc">PFMatrixDescription</span><span class="p">(</span><span class="n">MatrixDescription</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Matrix description for Particle Filter class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PFMatrixDescription.get_names"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.PFMatrixDescription.get_names">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_names</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">NAMES</span></div>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Holds the names of the matrices used in the Kalaman Filter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">MatrixDescription</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PFMatrixDescription.set_matrix"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.PFMatrixDescription.set_matrix">[docs]</a>    <span class="nd">@check_in_array</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="n">NAMES</span><span class="p">)</span>
+    <span class="nd">@check_not_none</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Cannot set a matrix to None. Need a value.&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the EKF matrix name to the given value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_matrices</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span></div>
+
+<div class="viewcode-block" id="PFMatrixDescription.get_matrix"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.PFMatrixDescription.get_matrix">[docs]</a>    <span class="nd">@check_in_array</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="n">NAMES</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrices</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="ParticleFilter"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter">[docs]</a><span class="k">class</span> <span class="nc">ParticleFilter</span><span class="p">(</span><span class="n">IterativeFilterBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements Particle Filter algorithm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_particles</span><span class="p">,</span> <span class="n">num_resample_particles</span><span class="p">,</span> <span class="n">state_vec</span><span class="p">,</span>  <span class="n">motion_model</span><span class="p">,</span>
+                 <span class="n">measurement_model</span><span class="p">,</span> <span class="n">likelihood_model</span><span class="p">,</span> <span class="n">mat_desc</span><span class="o">=</span><span class="n">PFMatrixDescription</span><span class="p">()):</span>
+
+        <span class="n">IterativeFilterBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_vec</span><span class="o">=</span><span class="n">state_vec</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_particles</span> <span class="o">=</span> <span class="n">num_particles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_resample_particles</span> <span class="o">=</span> <span class="n">num_resample_particles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_motion_model</span> <span class="o">=</span> <span class="n">motion_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_measurement_model</span> <span class="o">=</span> <span class="n">measurement_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_likelihood_model</span> <span class="o">=</span> <span class="n">likelihood_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mat_desc</span> <span class="o">=</span> <span class="n">mat_desc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_particles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">state_vec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">num_particles</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_particles</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_importance_weight_calculator</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_covariance_calculator</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ParticleFilter.set_importance_weights_calculator"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.set_importance_weights_calculator">[docs]</a>    <span class="k">def</span> <span class="nf">set_importance_weights_calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the type responsible for calculating the weights</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_importance_weight_calculator</span> <span class="o">=</span> <span class="n">calculator</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.set_covariance_calculator"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.set_covariance_calculator">[docs]</a>    <span class="k">def</span> <span class="nf">set_covariance_calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the type responsible for calculating the covariance matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_covariance_calculator</span> <span class="o">=</span> <span class="n">calculator</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.get_particles"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.get_particles">[docs]</a>    <span class="k">def</span> <span class="nf">get_particles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the particles list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_particles</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.get_matrix"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.get_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the matrix with the given name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mat_desc</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.get_matrix_descriptor"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.get_matrix_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">get_matrix_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the matrix descriptort object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mat_desc</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.set_weights"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.set_weights">[docs]</a>    <span class="k">def</span> <span class="nf">set_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the weights for the particles</span>
+<span class="sd">        TODO: We should check if the given type is Numpy array and if not convert it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="p">))</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span> <span class="o">=</span> <span class="n">weights</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.get_weights"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.get_weights">[docs]</a>    <span class="k">def</span> <span class="nf">get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the weights for the particles</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.normalize_weights"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.normalize_weights">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Normalize the weights</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.predict"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">u</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">pidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_particles</span><span class="p">):</span>
+            <span class="n">wp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="p">[</span><span class="n">pidx</span><span class="p">]</span>
+
+            <span class="n">state_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motion_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_previous_state_vector</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mat_desc</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mat_desc</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">],</span> <span class="n">u</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_vec</span>
+            <span class="n">wp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_importance_weight_calculator</span><span class="p">(</span><span class="n">wp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_particles</span><span class="p">[:,</span> <span class="n">pidx</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_vec</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">pidx</span><span class="p">]</span> <span class="o">=</span> <span class="n">wp</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize_weights</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">state_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_particles</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mat_desc</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_covariance_calculator</span><span class="p">(</span><span class="n">state_vec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_particles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.update"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the estimate. Essentially performs the resampling step</span>
+<span class="sd">        meaning that a new set of particles and particle weights is generated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">Neff</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="o">.</span><span class="n">T</span><span class="p">))[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Effective particle number</span>
+        <span class="n">NP</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_particles</span>
+        <span class="n">NTh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_resample_particles</span>
+
+        <span class="k">if</span> <span class="n">Neff</span> <span class="o">&lt;</span> <span class="n">NTh</span><span class="p">:</span>
+            <span class="n">wcum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights</span><span class="p">)</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights</span> <span class="o">*</span> <span class="mf">0.0</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">NP</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">NP</span>
+            <span class="n">resampleid</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">NP</span>
+
+            <span class="n">inds</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NP</span><span class="p">):</span>
+                <span class="k">while</span> <span class="n">resampleid</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">wcum</span><span class="p">[</span><span class="n">ind</span><span class="p">]:</span>
+                    <span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_particles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_particles</span><span class="p">[:,</span> <span class="n">inds</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">NP</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">NP</span>  <span class="c1"># init weight</span></div>
+
+<div class="viewcode-block" id="ParticleFilter.iterate"><a class="viewcode-back" href="../../estimation.html#estimation.particle_filter.ParticleFilter.iterate">[docs]</a>    <span class="k">def</span> <span class="nf">iterate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform own iteration over the steps fo PF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mat_desc</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Alexandros Giavaras.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
