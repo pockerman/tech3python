@@ -1,0 +1,413 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>estimation package &#8212; tech3python 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="estimation" href="modules.html" />
+    <link rel="prev" title="Welcome to tech3python’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="estimation-package">
+<h1>estimation package<a class="headerlink" href="#estimation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-estimation.extended_kalman_filter">
+<span id="estimation-extended-kalman-filter-module"></span><h2>estimation.extended_kalman_filter module<a class="headerlink" href="#module-estimation.extended_kalman_filter" title="Permalink to this headline">¶</a></h2>
+<p>Implementation of Extended Kalman Filter algorithm</p>
+<dl class="class">
+<dt id="estimation.extended_kalman_filter.EKFMatrixDescription">
+<em class="property">class </em><code class="descclassname">estimation.extended_kalman_filter.</code><code class="descname">EKFMatrixDescription</code><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#EKFMatrixDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.EKFMatrixDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#estimation.matrix_descriptor.MatrixDescription" title="estimation.matrix_descriptor.MatrixDescription"><code class="xref py py-class docutils literal"><span class="pre">estimation.matrix_descriptor.MatrixDescription</span></code></a></p>
+<p>Matrix description for Extended Kalman Filter class</p>
+<dl class="attribute">
+<dt id="estimation.extended_kalman_filter.EKFMatrixDescription.NAMES">
+<code class="descname">NAMES</code><em class="property"> = ['A', 'B', 'H', 'Hjac', 'P', 'K', 'Q', 'R', 'L', 'F']</em><a class="headerlink" href="#estimation.extended_kalman_filter.EKFMatrixDescription.NAMES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.extended_kalman_filter.EKFMatrixDescription.get_matrix">
+<code class="descname">get_matrix</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#EKFMatrixDescription.get_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.EKFMatrixDescription.get_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="estimation.extended_kalman_filter.EKFMatrixDescription.get_names">
+<em class="property">classmethod </em><code class="descname">get_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#EKFMatrixDescription.get_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.EKFMatrixDescription.get_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.extended_kalman_filter.EKFMatrixDescription.set_matrix">
+<code class="descname">set_matrix</code><span class="sig-paren">(</span><em>name</em>, <em>mat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#EKFMatrixDescription.set_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.EKFMatrixDescription.set_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the EKF matrix name to the given value</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="estimation.extended_kalman_filter.ExtendedKalmanFilter">
+<em class="property">class </em><code class="descclassname">estimation.extended_kalman_filter.</code><code class="descname">ExtendedKalmanFilter</code><span class="sig-paren">(</span><em>state_vec</em>, <em>mat_desc</em>, <em>motion_model</em>, <em>measurement_model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#ExtendedKalmanFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.ExtendedKalmanFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Implementation of the Extended Kalman Filter algorithm</p>
+<dl class="method">
+<dt id="estimation.extended_kalman_filter.ExtendedKalmanFilter.iterate">
+<code class="descname">iterate</code><span class="sig-paren">(</span><em>u</em>, <em>z</em>, <em>**kwrags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#ExtendedKalmanFilter.iterate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.ExtendedKalmanFilter.iterate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform one iteration step for Extended Kalman Filter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.extended_kalman_filter.ExtendedKalmanFilter.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#ExtendedKalmanFilter.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.ExtendedKalmanFilter.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the prediction step for Extended Kalman Filter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.extended_kalman_filter.ExtendedKalmanFilter.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/extended_kalman_filter.html#ExtendedKalmanFilter.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.extended_kalman_filter.ExtendedKalmanFilter.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the update step of the Kalman Filter</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-estimation.iterative_filter_base">
+<span id="estimation-iterative-filter-base-module"></span><h2>estimation.iterative_filter_base module<a class="headerlink" href="#module-estimation.iterative_filter_base" title="Permalink to this headline">¶</a></h2>
+<p>Base class for filtering algorithms</p>
+<dl class="class">
+<dt id="estimation.iterative_filter_base.IterativeFilterBase">
+<em class="property">class </em><code class="descclassname">estimation.iterative_filter_base.</code><code class="descname">IterativeFilterBase</code><span class="sig-paren">(</span><em>state_vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/iterative_filter_base.html#IterativeFilterBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.iterative_filter_base.IterativeFilterBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">abc.ABC</span></code></a></p>
+<dl class="method">
+<dt id="estimation.iterative_filter_base.IterativeFilterBase.get_previous_state_vector">
+<code class="descname">get_previous_state_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/iterative_filter_base.html#IterativeFilterBase.get_previous_state_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.iterative_filter_base.IterativeFilterBase.get_previous_state_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the previous state vector</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.iterative_filter_base.IterativeFilterBase.get_state">
+<code class="descname">get_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/iterative_filter_base.html#IterativeFilterBase.get_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.iterative_filter_base.IterativeFilterBase.get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state vector</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.iterative_filter_base.IterativeFilterBase.iterate">
+<code class="descname">iterate</code><span class="sig-paren">(</span><em>u</em>, <em>z</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/iterative_filter_base.html#IterativeFilterBase.iterate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.iterative_filter_base.IterativeFilterBase.iterate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do one iteration step for the filter</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-estimation.kalman_filter">
+<span id="estimation-kalman-filter-module"></span><h2>estimation.kalman_filter module<a class="headerlink" href="#module-estimation.kalman_filter" title="Permalink to this headline">¶</a></h2>
+<p>Kalaman Filter implementation</p>
+<dl class="class">
+<dt id="estimation.kalman_filter.KFMatrixDescription">
+<em class="property">class </em><code class="descclassname">estimation.kalman_filter.</code><code class="descname">KFMatrixDescription</code><a class="reference internal" href="_modules/estimation/kalman_filter.html#KFMatrixDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KFMatrixDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#estimation.matrix_descriptor.MatrixDescription" title="estimation.matrix_descriptor.MatrixDescription"><code class="xref py py-class docutils literal"><span class="pre">estimation.matrix_descriptor.MatrixDescription</span></code></a></p>
+<p>Matrix description for Kalman Filter class</p>
+<dl class="attribute">
+<dt id="estimation.kalman_filter.KFMatrixDescription.NAMES">
+<code class="descname">NAMES</code><em class="property"> = ['A', 'B', 'H', 'P', 'K', 'Q', 'R']</em><a class="headerlink" href="#estimation.kalman_filter.KFMatrixDescription.NAMES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.kalman_filter.KFMatrixDescription.get_matrix">
+<code class="descname">get_matrix</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/kalman_filter.html#KFMatrixDescription.get_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KFMatrixDescription.get_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="estimation.kalman_filter.KFMatrixDescription.get_names">
+<em class="property">classmethod </em><code class="descname">get_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/kalman_filter.html#KFMatrixDescription.get_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KFMatrixDescription.get_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.kalman_filter.KFMatrixDescription.set_matrix">
+<code class="descname">set_matrix</code><span class="sig-paren">(</span><em>name</em>, <em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/kalman_filter.html#KFMatrixDescription.set_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KFMatrixDescription.set_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Matrix with the given name to the given value</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="estimation.kalman_filter.KalmanFilter">
+<em class="property">class </em><code class="descclassname">estimation.kalman_filter.</code><code class="descname">KalmanFilter</code><span class="sig-paren">(</span><em>state_vec</em>, <em>mat_desc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/kalman_filter.html#KalmanFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KalmanFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#estimation.iterative_filter_base.IterativeFilterBase" title="estimation.iterative_filter_base.IterativeFilterBase"><code class="xref py py-class docutils literal"><span class="pre">estimation.iterative_filter_base.IterativeFilterBase</span></code></a></p>
+<p>Implementation of Kalman Filtering</p>
+<dl class="method">
+<dt id="estimation.kalman_filter.KalmanFilter.iterate">
+<code class="descname">iterate</code><span class="sig-paren">(</span><em>u</em>, <em>z</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/kalman_filter.html#KalmanFilter.iterate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KalmanFilter.iterate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform one iteration step for Kalman Filter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.kalman_filter.KalmanFilter.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/kalman_filter.html#KalmanFilter.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KalmanFilter.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the prediction step for Kalman Filter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.kalman_filter.KalmanFilter.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/kalman_filter.html#KalmanFilter.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.kalman_filter.KalmanFilter.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the update step of the Kalman Filter</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-estimation.matrix_descriptor">
+<span id="estimation-matrix-descriptor-module"></span><h2>estimation.matrix_descriptor module<a class="headerlink" href="#module-estimation.matrix_descriptor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="estimation.matrix_descriptor.MatrixDescription">
+<em class="property">class </em><code class="descclassname">estimation.matrix_descriptor.</code><code class="descname">MatrixDescription</code><a class="reference internal" href="_modules/estimation/matrix_descriptor.html#MatrixDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.matrix_descriptor.MatrixDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Matrix description for various filters</p>
+<dl class="method">
+<dt id="estimation.matrix_descriptor.MatrixDescription.get_matrix">
+<code class="descname">get_matrix</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/matrix_descriptor.html#MatrixDescription.get_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.matrix_descriptor.MatrixDescription.get_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="estimation.matrix_descriptor.MatrixDescription.get_names">
+<em class="property">classmethod </em><code class="descname">get_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/matrix_descriptor.html#MatrixDescription.get_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.matrix_descriptor.MatrixDescription.get_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.matrix_descriptor.MatrixDescription.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/matrix_descriptor.html#MatrixDescription.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.matrix_descriptor.MatrixDescription.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the matrix descriptor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.matrix_descriptor.MatrixDescription.set_matrix">
+<code class="descname">set_matrix</code><span class="sig-paren">(</span><em>name</em>, <em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/matrix_descriptor.html#MatrixDescription.set_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.matrix_descriptor.MatrixDescription.set_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Matrix with the given name to the given value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.matrix_descriptor.MatrixDescription.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>**input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/matrix_descriptor.html#MatrixDescription.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.matrix_descriptor.MatrixDescription.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any updates of the matrices if needed. Applications should
+provide the actual implementation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="estimation.matrix_descriptor.MatrixDescriptionIterator">
+<em class="property">class </em><code class="descclassname">estimation.matrix_descriptor.</code><code class="descname">MatrixDescriptionIterator</code><span class="sig-paren">(</span><em>matrix_descriptor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/matrix_descriptor.html#MatrixDescriptionIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.matrix_descriptor.MatrixDescriptionIterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Helper class to assist iteration over the matrices in
+a MatrixDescriptor</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-estimation.measurement_model">
+<span id="estimation-measurement-model-module"></span><h2>estimation.measurement_model module<a class="headerlink" href="#module-estimation.measurement_model" title="Permalink to this headline">¶</a></h2>
+<p>Measurement model</p>
+<dl class="class">
+<dt id="estimation.measurement_model.MeasurementModel">
+<em class="property">class </em><code class="descclassname">estimation.measurement_model.</code><code class="descname">MeasurementModel</code><a class="reference internal" href="_modules/estimation/measurement_model.html#MeasurementModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.measurement_model.MeasurementModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-estimation.motion_model">
+<span id="estimation-motion-model-module"></span><h2>estimation.motion_model module<a class="headerlink" href="#module-estimation.motion_model" title="Permalink to this headline">¶</a></h2>
+<p>Motion model</p>
+<dl class="class">
+<dt id="estimation.motion_model.MotionModel">
+<em class="property">class </em><code class="descclassname">estimation.motion_model.</code><code class="descname">MotionModel</code><a class="reference internal" href="_modules/estimation/motion_model.html#MotionModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.motion_model.MotionModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Vanilla motion model</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-estimation.particle_filter">
+<span id="estimation-particle-filter-module"></span><h2>estimation.particle_filter module<a class="headerlink" href="#module-estimation.particle_filter" title="Permalink to this headline">¶</a></h2>
+<p>Implementation of Particle Filtering</p>
+<dl class="class">
+<dt id="estimation.particle_filter.PFMatrixDescription">
+<em class="property">class </em><code class="descclassname">estimation.particle_filter.</code><code class="descname">PFMatrixDescription</code><a class="reference internal" href="_modules/estimation/particle_filter.html#PFMatrixDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.PFMatrixDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#estimation.matrix_descriptor.MatrixDescription" title="estimation.matrix_descriptor.MatrixDescription"><code class="xref py py-class docutils literal"><span class="pre">estimation.matrix_descriptor.MatrixDescription</span></code></a></p>
+<p>Matrix description for Particle Filter class</p>
+<dl class="attribute">
+<dt id="estimation.particle_filter.PFMatrixDescription.NAMES">
+<code class="descname">NAMES</code><em class="property"> = ['A', 'B', 'P', 'K', 'Q', 'R', 'F']</em><a class="headerlink" href="#estimation.particle_filter.PFMatrixDescription.NAMES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.PFMatrixDescription.get_matrix">
+<code class="descname">get_matrix</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#PFMatrixDescription.get_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.PFMatrixDescription.get_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="estimation.particle_filter.PFMatrixDescription.get_names">
+<em class="property">classmethod </em><code class="descname">get_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#PFMatrixDescription.get_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.PFMatrixDescription.get_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.PFMatrixDescription.set_matrix">
+<code class="descname">set_matrix</code><span class="sig-paren">(</span><em>name</em>, <em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#PFMatrixDescription.set_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.PFMatrixDescription.set_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the EKF matrix name to the given value</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="estimation.particle_filter.ParticleFilter">
+<em class="property">class </em><code class="descclassname">estimation.particle_filter.</code><code class="descname">ParticleFilter</code><span class="sig-paren">(</span><em>num_particles</em>, <em>num_resample_particles</em>, <em>state_vec</em>, <em>motion_model</em>, <em>measurement_model</em>, <em>likelihood_model</em>, <em>mat_desc=&lt;estimation.particle_filter.PFMatrixDescription object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#estimation.iterative_filter_base.IterativeFilterBase" title="estimation.iterative_filter_base.IterativeFilterBase"><code class="xref py py-class docutils literal"><span class="pre">estimation.iterative_filter_base.IterativeFilterBase</span></code></a></p>
+<p>Implements Particle Filter algorithm</p>
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.get_matrix">
+<code class="descname">get_matrix</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.get_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.get_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the matrix with the given name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.get_matrix_descriptor">
+<code class="descname">get_matrix_descriptor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.get_matrix_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.get_matrix_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the matrix descriptort object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.get_particles">
+<code class="descname">get_particles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.get_particles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.get_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the particles list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.get_weights">
+<code class="descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.get_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the weights for the particles</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.iterate">
+<code class="descname">iterate</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.iterate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.iterate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform own iteration over the steps fo PF</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.normalize_weights">
+<code class="descname">normalize_weights</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.normalize_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.normalize_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the weights</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.set_covariance_calculator">
+<code class="descname">set_covariance_calculator</code><span class="sig-paren">(</span><em>calculator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.set_covariance_calculator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.set_covariance_calculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the type responsible for calculating the covariance matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.set_importance_weights_calculator">
+<code class="descname">set_importance_weights_calculator</code><span class="sig-paren">(</span><em>calculator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.set_importance_weights_calculator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.set_importance_weights_calculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the type responsible for calculating the weights</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.set_weights">
+<code class="descname">set_weights</code><span class="sig-paren">(</span><em>weights</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.set_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.set_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the weights for the particles
+TODO: We should check if the given type is Numpy array and if not convert it</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="estimation.particle_filter.ParticleFilter.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/estimation/particle_filter.html#ParticleFilter.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#estimation.particle_filter.ParticleFilter.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the estimate. Essentially performs the resampling step
+meaning that a new set of particles and particle weights is generated</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-estimation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-estimation" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to tech3python’s documentation!</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">estimation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Alexandros Giavaras.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/estimation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
