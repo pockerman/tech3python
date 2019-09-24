@@ -215,8 +215,6 @@ def estimate(data):
             hx_dr = np.hstack((hx_dr, x_dr))
             hx_true = np.hstack((hx_true, x_true))
 
-
-
             particles = filter.get_particles()
             P = filter.get_matrix("P")
 

@@ -7,7 +7,8 @@ This is my Python playground...
 
 ### Algorithms
 
-- <a href="#">Example 1</a>
+- <a href="#">Example 1</a>: C3 Algorithm
+- <a href="#">Example 2</a>: Convert a binary number to its decimal representation
 
 ### Numerics 
 

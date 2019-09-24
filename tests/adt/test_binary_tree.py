@@ -1,3 +1,7 @@
+"""
+Unit tests for BinaryTree class
+"""
+
 import unittest
 from adt.binary_tree import BinaryTree
 from algorithms.preorder_tree_traversal import PreorderTreeTraversal
@@ -35,7 +39,7 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(bt.get_root().get_child(0).get_level(), 1,
                          msg="Invalid node level {0} should be 1 ".format(bt.get_root().get_child(0).get_level()))
 
-        # now add another node. Preorder traversal first scans the children
+        # now add another node. Preorder traversal first scans the node and then the children
         bt.push(4)
         self.assertEqual(len(bt), 3,
                          msg="Insert to " + type(bt).__name__ + " failed")

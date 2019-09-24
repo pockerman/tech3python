@@ -1,8 +1,8 @@
 """
-Algorithms Example 1
-
-Python uses the C3 algorithm to figure out the class
-inheritance. Code from the book: Pro Python 3, 3rd Edition
+Category: Algorithms 
+ID: Example 1
+Description: Python uses the C3 algorithm to figure out the class inheritance. 
+Taken From: Code from the book: Pro Python 3, 3rd Edition
 """
 
 import itertools

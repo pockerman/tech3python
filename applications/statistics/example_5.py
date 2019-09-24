@@ -18,7 +18,6 @@ def main(*args, **kwargs):
 
     # plot the data
 
-
     """
     Create the model:
     
@@ -30,7 +29,7 @@ def main(*args, **kwargs):
 
     """
     model = LinearRegression(fit_intercept=True, normalize=False, copy_X=True, n_jobs=None)
-    model.fit(x ,y )
+    model.fit(x, y)
 
     print('intercept:', model.intercept_)
     print('slope:', model.coef_)
@@ -41,3 +40,4 @@ if __name__ == '__name__':
 
     print("Running Example statistics/example_5")
     main()
+    print("Done...")
