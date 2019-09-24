@@ -29,12 +29,11 @@ class ADTBase(ABC):
         """
         raise NotImplementedError("Should be implemented by derived classes")
 
-    @abstractmethod
     def empty(self):
         """
         Returns true if the ADT is empty
         """
-        raise NotImplementedError("Should be implemented by derived classes")
+        return len(self) == 0
 
 
 
