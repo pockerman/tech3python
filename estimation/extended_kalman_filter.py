@@ -10,8 +10,9 @@ from .matrix_descriptor import MatrixDescription
 
 
 class EKFMatrixDescription(MatrixDescription):
-    """
-    Matrix description for Extended Kalman Filter class
+
+    """Matrix description for Extended Kalman Filter class
+
     """
 
     @classmethod
@@ -24,11 +25,16 @@ class EKFMatrixDescription(MatrixDescription):
     NAMES = ["A", "B", "H", "Hjac", "P", "K", "Q", "R", "L", "F"]
 
     def __init__(self):
+
+        """Constructor
+
+        """
         MatrixDescription.__init__(self)
 
     @check_in_array(items=NAMES)
     @check_not_none(msg="Cannot set a matrix to None. Need a value.")
     def set_matrix(self, name, mat):
+
         """
         Set the EKF matrix name to the given value
         """
@@ -40,8 +46,8 @@ class EKFMatrixDescription(MatrixDescription):
 
 
 class ExtendedKalmanFilter:
-    """
-    Implementation of the Extended Kalman Filter algorithm
+    """Implementation of the Extended Kalman Filter algorithm
+
     """
 
     def __init__(self, state_vec, mat_desc, motion_model, measurement_model):
