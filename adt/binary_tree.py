@@ -9,8 +9,8 @@ class BinaryTree(TreeBase):
     Models a binary tree
     """
 
-    def __init__(self, insert_method):
-        TreeBase.__init__(self, insert_method=insert_method)
+    def __init__(self, insert_method, search_method):
+        TreeBase.__init__(self, insert_method=insert_method, search_method=search_method)
 
     def push(self, value):
 
@@ -30,3 +30,13 @@ class BinaryTree(TreeBase):
 
         if sucess:
             self._size += 1
+
+    def create(self, values):
+
+        """
+        Create a binary tree from the set of given values
+        :param values: list of values
+        """
+
+        for item in values:
+            self.push(value=item)

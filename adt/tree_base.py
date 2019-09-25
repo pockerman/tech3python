@@ -2,6 +2,7 @@
 Base class for implementing trees
 """
 from .adt_base import ADTBase
+from predicates.basic_predicates import HasValue
 
 
 class TreeNode:
@@ -17,6 +18,10 @@ class TreeNode:
 
         if self._parent is not None:
             self._level = self._parent.get_level() + 1
+            self._children = [None for i in range(parent.n_children())]
+
+    def __eq__(self, other):
+        return id(self) == id(other)
 
     @property
     def value(self):
@@ -112,6 +117,13 @@ class TreeNode:
 
         return None
 
+    def is_leaf(self):
+
+        """
+        Returns True if this Node is a leaf
+        """
+        return self._children is None or set(self._children) == set([None for i in range(len(self._children))])
+
 
 class TreeBase(ADTBase):
 
@@ -119,11 +131,12 @@ class TreeBase(ADTBase):
     Base class for trees
     """
 
-    def __init__(self, insert_method):
+    def __init__(self, insert_method, search_method):
         super(TreeBase, self).__init__()
         self._size = 0
         self._root = None
         self._insert_method = insert_method
+        self._search_method = search_method
 
     def __len__(self):
 
@@ -131,6 +144,14 @@ class TreeBase(ADTBase):
         Returns the number of elements present in the tree
         """
         return self._size
+
+    def set_search_method(self , method):
+
+        """
+        Set the search method that the ADT is using to
+        search its contents
+        """
+        self._search_method = method
 
     def empty(self):
 
@@ -145,6 +166,34 @@ class TreeBase(ADTBase):
         Returns the root node
         """
         return self._root
+
+    def delete(self, value):
+
+        """
+        Removes the given value in the ADT if present
+        """
+        # find the node that holds the value
+        predicate = HasValue(value=value)
+
+        root, child, child_idx = self._search_method.traverse(root=self.get_root(), predicate=predicate)
+
+        # if we found a node that has this value we need to remove
+        # the subtree
+        if child is not None:
+
+            # if this is a leaf then this is easy
+            if child.is_leaf():
+                parent = child.get_parent()
+                child_idx = parent.which_child_am_i(child)
+
+                if child_idx is None:
+                    raise ValueError("Child id could not be found")
+
+                # tell the parent that this child died
+                parent.set_child(child_idx, None)
+                self._size -= 1
+                return True
+        return False
 
     def _make_root(self, node):
 
