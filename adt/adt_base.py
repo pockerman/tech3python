@@ -29,6 +29,15 @@ class ADTBase(ABC):
         """
         raise NotImplementedError("Should be implemented by derived classes")
 
+    @abstractmethod
+    def delete(self, value):
+
+        """
+        Removes the given value in the ADT if present. Returns True if successful otherwise
+        returns False
+        """
+        raise NotImplementedError("Should be implemented by derived classes")
+
     def empty(self):
         """
         Returns true if the ADT is empty
