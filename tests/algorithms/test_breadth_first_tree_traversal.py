@@ -49,9 +49,9 @@ class BFSTreeTraversalTest(unittest.TestCase):
         self.assertEqual(idx, 1, msg="Invalid child node id")
 
     """
-        Test Scenario: Application attempts to traverse a tree with five nodes where the left child at level 1 satisfies the predicate
-        Expected Output: The right child index,  and root should be returned 
-        """
+    Test Scenario: Application attempts to traverse a tree with five nodes where the left child at level 1 satisfies the predicate
+    Expected Output: The right child index,  and root should be returned 
+    """
 
     def test_can_find_deeper_level_node(self):
         root = TreeNode(data=10, parent=None)
