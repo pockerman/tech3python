@@ -56,6 +56,11 @@ class TreeNode:
         return self._children[idx]
 
     def set_children(self, children):
+
+        """
+        Set the children of this node
+        :param children: A list of children
+        """
         self._children = children
 
     def get_children(self):
@@ -64,6 +69,10 @@ class TreeNode:
         return self._children
 
     def n_children(self):
+
+        """
+        Returns the number of children of the node
+        """
         if self._children is None:
             return 0
         return len(self._children)
@@ -177,8 +186,7 @@ class TreeBase(ADTBase):
 
         root, child, child_idx = self._search_method.traverse(root=self.get_root(), predicate=predicate)
 
-        # if we found a node that has this value we need to remove
-        # the subtree
+        # if we found a node that has this value we need to remove it
         if child is not None:
 
             # if this is a leaf then this is easy
