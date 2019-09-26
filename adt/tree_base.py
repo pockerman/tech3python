@@ -64,6 +64,12 @@ class TreeNode:
         self._children = children
 
     def get_children(self):
+
+        """
+        Returns the list of children of this node
+        :return:
+        """
+
         if self._children is None:
             raise AttributeError("Children is None")
         return self._children
@@ -111,6 +117,11 @@ class TreeNode:
         return self._parent
 
     def create_and_set_child(self, idx, item):
+
+        """
+        Create a node having data = item and set the created node as the
+        idx-th tree
+        """
         node = TreeNode(data=item, parent=self)
         node.set_children(children=[None for i in range(self.n_children())])
         self.set_child(idx, node)
@@ -131,7 +142,33 @@ class TreeNode:
         """
         Returns True if this Node is a leaf
         """
-        return self._children is None or set(self._children) == set([None for i in range(len(self._children))])
+
+        if self._children is None:
+            return True
+
+        found=False
+        for i in range(len(self._children)):
+            if self._children[i] is not None:
+                found = True
+                break
+
+        if found:
+            return False
+        return True
+
+        # with Python 3.6 I am getting  TypeError: unhashable type: 'TreeNode'
+        #return self._children is None or set(self._children) == set([None for i in range(len(self._children))])
+
+    def contains_leaf(self):
+
+        if self.is_leaf():
+            return False, None
+
+        for child in self.get_children():
+            if child is not None and child.is_leaf():
+                return True, child
+
+        return False, None
 
 
 class TreeBase(ADTBase):
@@ -176,6 +213,26 @@ class TreeBase(ADTBase):
         """
         return self._root
 
+    def has_value(self, value):
+
+        """
+        Returns True if the tree contains the given value
+        """
+        # find the node that holds the value
+        predicate = HasValue(value=value)
+        root, child, child_idx = self._search_method.traverse(root=self.get_root(), predicate=predicate)
+        return child is not None
+
+    def find(self, value):
+
+        """
+        Returns the node that has the given value
+        """
+        # find the node that holds the value
+        predicate = HasValue(value=value)
+        root, child, child_idx = self._search_method.traverse(root=self.get_root(), predicate=predicate)
+        return child
+
     def delete(self, value):
 
         """
@@ -184,23 +241,51 @@ class TreeBase(ADTBase):
         # find the node that holds the value
         predicate = HasValue(value=value)
 
-        root, child, child_idx = self._search_method.traverse(root=self.get_root(), predicate=predicate)
+        parent, child, child_idx = self._search_method.traverse(root=self.get_root(), predicate=predicate)
+
+        if parent is not child.get_parent():
+            raise ValueError("Parent mismatch...")
+
+        if child_idx is None:
+            raise ValueError("Child id could not be found")
 
         # if we found a node that has this value we need to remove it
         if child is not None:
 
+            #parent = child.get_parent()
+            #child_idx = parent.which_child_am_i(child)
+
             # if this is a leaf then this is easy
             if child.is_leaf():
-                parent = child.get_parent()
-                child_idx = parent.which_child_am_i(child)
-
-                if child_idx is None:
-                    raise ValueError("Child id could not be found")
 
                 # tell the parent that this child died
                 parent.set_child(child_idx, None)
                 self._size -= 1
                 return True
+            else:
+
+                contains_leaf, child_leaf = child.contains_leaf()
+
+                # does the node have a leaf?
+                if contains_leaf:
+
+                    # the node to be deleted contains a
+                    # leaf. We will replace this node with the leaf
+                    parent.set_child(idx=child_idx, item=child_leaf)
+                    child_leaf.set_parent(parent=parent)
+
+                    # tell the other children of child that they
+                    # have a new father
+                    children = child.get_children()
+                    for the_child in children:
+                        if the_child is not child_leaf:
+                            the_child.set_parent(parent=child_leaf)
+                            the_child_idx = child.which_child_am_i(the_child)
+
+                            child_leaf.set_child(the_child_idx, the_child)
+
+                    self._size -= 1
+                    return True
         return False
 
     def _make_root(self, node):

@@ -38,6 +38,16 @@ class ADTBase(ABC):
         """
         raise NotImplementedError("Should be implemented by derived classes")
 
+    @abstractmethod
+    def has_value(self, value):
+
+        """
+        Returns True if the ADT contains the given value
+        """
+        raise NotImplementedError("Should be implemented by derived classes")
+
+
+
     def empty(self):
         """
         Returns true if the ADT is empty
