@@ -1,5 +1,4 @@
 """
-
 Category: Statistics
 ID: Example 5
 Description: Simple Linear Regression with scikit-learn
