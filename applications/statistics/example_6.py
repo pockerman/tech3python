@@ -20,7 +20,8 @@ def main():
 
     print(df.std())  #
 
-if __name__ == '__name__':
+
+if __name__ == '__main__':
 
     print("Running Example statistics/example_6")
     main()
