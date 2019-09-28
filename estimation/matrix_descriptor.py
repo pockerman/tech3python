@@ -49,13 +49,14 @@ class MatrixDescription:
         return self.get_matrix(name=item)
 
     def __setitem__(self, key, value):
-        self.set_matrix(name=key, mat=value)
+        self.set_matrix(name=key, item=value)
 
     def __len__(self):
         return len(self.get_names())
 
 
 class MatrixDescriptionIterator:
+
     """
     Helper class to assist iteration over the matrices in
     a MatrixDescriptor
