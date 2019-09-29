@@ -59,6 +59,8 @@ def find_min(array):
         return array[idx_middle]
 
     return None
+
+
 def main():
     array = [3, 4, 5, 1, 2]
     min = find_min(array=array)
@@ -77,6 +79,7 @@ def main():
     array = [1, 0, 1, 1, 1]
     min = find_min(array=array)
     print("Min element in {0} is {1}".format(array, min))
+
 
 if __name__ == '__main__':
     print("Running Example algorithms/example_4")
