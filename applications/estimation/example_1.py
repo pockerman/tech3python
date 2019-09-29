@@ -1,6 +1,5 @@
 """
-
-Category: Estimation
+Category: Estimation, Filtering
 ID: Example 1
 Description: Localization using Particle Filter 
 Taken From: https://github.com/AtsushiSakai/PythonRobotics
