@@ -63,8 +63,8 @@ def find_min(array):
 
 def main():
     array = [3, 4, 5, 1, 2]
-    min = find_min(array=array)
-    print("Min element in {0} is {1}".format(array, min))
+    min_el = find_min(array=array)
+    print("Min element in {0} is {1}".format(array, min_el))
 
     # Let’s look at the following example
     # {1, 0, 1, 1, 1} this is a rotation of
@@ -77,8 +77,8 @@ def main():
     # two numbers pointed to by P1 and P2 are equal, and it cannot move pointers
     # to narrow the search range.It has to search sequentially in such a scenario.
     array = [1, 0, 1, 1, 1]
-    min = find_min(array=array)
-    print("Min element in {0} is {1}".format(array, min))
+    min_el = find_min(array=array)
+    print("Min element in {0} is {1}".format(array, min_el))
 
 
 if __name__ == '__main__':

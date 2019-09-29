@@ -3,6 +3,7 @@ Implementation of Particle Filtering
 """
 
 import numpy as np
+import copy
 
 from base.basic_decorators import check_in_array
 from base.basic_decorators import check_not_none
@@ -46,7 +47,7 @@ class ParticleFilter(IterativeFilterBase):
     """
 
     def __init__(self, num_particles, num_resample_particles, state_vec,  motion_model,
-                 measurement_model, likelihood_model, mat_desc=PFMatrixDescription()):
+                 measurement_model, mat_desc=PFMatrixDescription()):
 
         IterativeFilterBase.__init__(self, state_vec=state_vec)
 
@@ -54,7 +55,6 @@ class ParticleFilter(IterativeFilterBase):
         self._num_resample_particles = num_resample_particles
         self._motion_model = motion_model
         self._measurement_model = measurement_model
-        self._likelihood_model = likelihood_model
         self._mat_desc = mat_desc
         self._particles = np.zeros(shape=(state_vec.shape[0], num_particles), dtype='float')
         self._weights = np.zeros(shape=(1, num_particles), dtype='float')
@@ -78,6 +78,15 @@ class ParticleFilter(IterativeFilterBase):
         Returns the particles list
         """
         return self._particles
+
+    def set_matrix(self, name, mat):
+
+        """
+        Set the matrix named by the given name
+        :param name: The name of the matrix to set
+        :param mat:  The value to set the matrix to
+        """
+        self._mat_desc.set_matrix(name=name, item=mat)
 
     def get_matrix(self, name):
         """
@@ -112,19 +121,22 @@ class ParticleFilter(IterativeFilterBase):
         """
         Normalize the weights
         """
-        self._weights = self._weights/sum(self._weights)
+        self._weights = self._weights/self._weights.sum() #sum(self._weights)
 
     def predict(self, **kwargs):
 
         u = kwargs['u']
 
         for pidx in range(self._num_particles):
-            wp = self._weights[pidx]
 
-            state_vec = self._motion_model(self.get_previous_state_vector(), self._mat_desc["F"], self._mat_desc["B"], u)
+            # get the particle weight
+            wp = self._weights[0, pidx]
+
+            # calculate state vector from motion model
+            state_vec = self._motion_model(self.previous_state_vector, self._mat_desc["F"], self._mat_desc["B"], u)
+
             kwargs['state'] = state_vec
             wp = self._importance_weight_calculator(wp, **kwargs)
-
             self._particles[:, pidx] = state_vec[:, 0]
             self._weights[0, pidx] = wp
 
@@ -132,6 +144,7 @@ class ParticleFilter(IterativeFilterBase):
 
         state_vec = self._particles.dot(self._weights.T)
         self._mat_desc["P"] = self._covariance_calculator(state_vec, self._particles, self._weights)
+        self.state = state_vec
 
     def update(self, **kwargs):
 
@@ -163,6 +176,13 @@ class ParticleFilter(IterativeFilterBase):
         """
         Perform own iteration over the steps fo PF
         """
-        self.predict(**kwargs)
-        self.update(**kwargs)
-        self._mat_desc.update(**kwargs)
+
+        copy_kwargs = copy.deepcopy(kwargs)
+        copy_kwargs['state'] = self.state
+
+        self.predict(**copy_kwargs)
+        self.update(**copy_kwargs)
+
+        # update the state vector
+        self.previous_state_vector = self.state
+        self._mat_desc.update(**copy_kwargs)
