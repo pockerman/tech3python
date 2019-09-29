@@ -31,7 +31,7 @@ This is my Python playground...
 - <a href="#">Example 1</a>: Kalman Filter
 - <a href="#">Example 2</a>: Extended Kalman Filter
 - <a href="#">Example 3</a>: Unscented Kalman Filter
-- <a href="#">Example 4</a>: Particle Filter
+- <a href="applications/estimation/example_1.py">Particle Filter</a>: Demo for Particle Filtering 
 - <a href="#">Example 5</a>: Histogram Filter
 
 
