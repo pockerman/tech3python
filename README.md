@@ -10,6 +10,7 @@ This is my Python playground...
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/algorithms/example_1.py">Example 1</a>: C3 Algorithm
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/algorithms/example_2.py">Example 2</a>: Convert a binary number to its decimal representation
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/algorithms/example_3.py">Example 3</a>: Fibonacci Sequence
+- <a href="applications/algorithms/example_4.py">Example 4</a>: Find the minimum element between two increasingly sorted sub-arrays
 
 ### Numerics 
 
