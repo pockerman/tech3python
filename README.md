@@ -14,6 +14,8 @@ This is my Python playground...
 
 ### Numerics 
 
+- <a href="applications/numerics/example_1.py">Monte Carlo integration:</a> Implement a simple Monte Carlo integrator
+
 ### Linear Algebra
 
 ### Statistics
