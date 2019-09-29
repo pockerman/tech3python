@@ -181,7 +181,7 @@ class ParticleFilter(IterativeFilterBase):
         copy_kwargs['state'] = self.state
 
         self.predict(**copy_kwargs)
-        #self.update(**copy_kwargs)
+        self.update(**copy_kwargs)
 
         # update the state vector
         self.previous_state_vector = self.state

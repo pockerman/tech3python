@@ -142,9 +142,9 @@ def observation(x_true, xd, u, matrix_descriptor):
     return x_true, z, xd, ud
 
 
-def plot_covariance_ellipse(xEst, PEst):  # pragma: no cover
+def plot_covariance_ellipse(x_est, P_est):  # pragma: no cover
 
-    Pxy = PEst[0:2, 0:2]
+    Pxy = P_est[0:2, 0:2]
     eigval, eigvec = np.linalg.eig(Pxy)
 
     if eigval[0] >= eigval[1]:
@@ -171,11 +171,13 @@ def plot_covariance_ellipse(xEst, PEst):  # pragma: no cover
     x = [a * math.cos(it) for it in t]
     y = [b * math.sin(it) for it in t]
     angle = math.atan2(eigvec[bigind, 1], eigvec[bigind, 0])
+
     R = np.array([[math.cos(angle), math.sin(angle)],
                   [-math.sin(angle), math.cos(angle)]])
+
     fx = R.dot(np.array([[x, y]]))
-    px = np.array(fx[0, :] + xEst[0, 0]).flatten()
-    py = np.array(fx[1, :] + xEst[1, 0]).flatten()
+    px = np.array(fx[0, :] + x_est[0, 0]).flatten()
+    py = np.array(fx[1, :] + x_est[1, 0]).flatten()
     plt.plot(px, py, "--r")
 
 
@@ -240,7 +242,7 @@ def estimate(data):
             plt.plot(np.array(hx_dr[0, :]).flatten(), np.array(hx_dr[1, :]).flatten(), "-k")
             plt.plot(np.array(hx_est[0, :]).flatten(), np.array(hx_est[1, :]).flatten(), "-r")
 
-            plot_covariance_ellipse(x_est, P)
+            plot_covariance_ellipse(x_est=x_est, P_est=P)
             plt.axis("equal")
 
             plt.grid(True)
