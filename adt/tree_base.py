@@ -27,19 +27,21 @@ class TreeNode:
     def value(self):
         return self._data
 
-    def set_data(self, data):
+    @property
+    def data(self):
 
         """
-        Set the data stored by this node
+        Returns the data stored by this node
         """
-        self._data = data
+        return self._data
 
-    def get_data(self):
+    @data.setter
+    def data(self, value):
 
         """
         Returns the data stored by the node
         """
-        return self._data
+        self._data = value
 
     def set_child(self, idx, item):
 
@@ -236,11 +238,11 @@ class TreeBase(ADTBase):
     def delete(self, value):
 
         """
-        Removes the given value in the ADT if present
+        Removes the given value in the tree if present
         """
+
         # find the node that holds the value
         predicate = HasValue(value=value)
-
         parent, child, child_idx = self._search_method.traverse(root=self.get_root(), predicate=predicate)
 
         if parent is not child.get_parent():
@@ -251,9 +253,6 @@ class TreeBase(ADTBase):
 
         # if we found a node that has this value we need to remove it
         if child is not None:
-
-            #parent = child.get_parent()
-            #child_idx = parent.which_child_am_i(child)
 
             # if this is a leaf then this is easy
             if child.is_leaf():
@@ -274,8 +273,7 @@ class TreeBase(ADTBase):
                     parent.set_child(idx=child_idx, item=child_leaf)
                     child_leaf.set_parent(parent=parent)
 
-                    # tell the other children of child that they
-                    # have a new father
+                    # tell the other children of child that they have a new father
                     children = child.get_children()
                     for the_child in children:
                         if the_child is not child_leaf:
@@ -286,6 +284,37 @@ class TreeBase(ADTBase):
 
                     self._size -= 1
                     return True
+                else:
+                    # the node to be deleted does not contain a leaf
+                    # search for any child that is either a leaf or contains a leaf
+
+                    children = child.get_children()
+                    while True:
+
+                        for the_child in children:
+
+                            if the_child is not None:
+                                if the_child.is_leaf() and the_child.data is not None:
+
+                                    # tell the parent that this child died
+                                    child_children = child.get_children()
+                                    parent.set_child(child_idx, None)
+
+                                    for c in child_children:
+                                        c.set_parent(parent=the_child)
+
+                                        for cc in c.get_children():
+                                            if cc is the_child:
+                                                child_idx = c.which_child_am_i()
+                                                c.set_child(child_idx, None)
+                                                break
+
+                                    the_child.set_parent(parent=parent)
+                                    self._size -= 1
+                                    return True
+                                else:
+                                    children = the_child.get_children()
+
         return False
 
     def _make_root(self, node):

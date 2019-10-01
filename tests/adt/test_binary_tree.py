@@ -120,7 +120,7 @@ class BinaryTreeTest(unittest.TestCase):
         bt = BinaryTree(insert_method=BreadthFirstTreeSearch, search_method=BreadthFirstTreeSearch)
         self.assertEqual(len(bt), 0, msg="Tree size is not empty")
 
-        values = [6, 2, 4, 1, 5, 8, 9, 10, 20, 25, 26, 0, 0, 0, 0,0, 0, 0, 0, 19, 20]
+        values = [6, 2, 4, 1, 5, 8, 9, 10, 20, 25, 26, 0, 0, 0, 0, 0, 0, 0, 0, 19, 20]
         bt.create(values)
         self.assertEqual(len(bt), len(values), msg="Invalid Tree size")
 
@@ -144,6 +144,44 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertIsNotNone(children[0], msg="Node with value={0} should not be None".format(25))
         self.assertEqual(children[0].get_parent(), node, msg="Node with value={0} should have parent with value {1}".format(25, value))
         self.assertIsNone(children[1], msg="Right child should be Node")
+
+    """
+        Test Scenario: Application creates a BinaryTree and adds nodes using BreathFirstTraversal as an insertion policy.
+                            It then deletes one of the nodes that does not have a leaf
+        Expected Output: Deleted node should be removed and replaced by the left child of the node to be deleted. 
+    """
+
+    def test_delete_node_and_replace_with_left_child_bfs_traversal(self):
+        bt = BinaryTree(insert_method=BreadthFirstTreeSearch, search_method=BreadthFirstTreeSearch)
+        self.assertEqual(len(bt), 0, msg="Tree size is not empty")
+
+        values = [6, 2, 4, 1, 5, 8, 9, 10, 20, 25, 26, 0, 0, 0, 0, 0, 0, 0, 0, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 50, 60, 70]
+        bt.create(values)
+        self.assertEqual(len(bt), len(values), msg="Invalid Tree size")
+
+        # now delete the node with value 5
+        value = 25
+
+        # this should replace the node with the node having value 26
+        # and make the parent of node with value 26 the node with value 2
+        # and change the parent for the children of node with value 5 to
+        # be the node with value 26
+        success = bt.delete(value=value)
+        self.assertTrue(success, msg="Could not remove node with value={0}".format(value))
+        self.assertEqual(len(bt), len(values) - 1, msg="Invalid Tree size")
+
+        # let's find the new node and check
+        value = 40
+        node = bt.find(value=value)
+        self.assertIsNotNone(node, msg="Node with value={0} should not be None".format(value))
+        self.assertEqual(node.get_parent().value, 2,
+                         msg="Parent value mismatch {0} should be {1}".format(node.get_parent().value, 2))
+        children = node.get_children()
+        self.assertIsNotNone(children[0], msg="Node with value={0} should not be None".format(25))
+        self.assertEqual(children[0].get_parent(), node,
+                         msg="Node with value={0} should have parent with value {1}".format(25, value))
+        self.assertIsNone(children[1], msg="Right child should be Node")
+
 
 if __name__ == '__main__':
     unittest.main()
