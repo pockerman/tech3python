@@ -1,6 +1,5 @@
 """
-
-Category: Estimation
+Category: Estimation, Filtering
 ID: Example 1
 Description: Localization using Particle Filter 
 Taken From: https://github.com/AtsushiSakai/PythonRobotics
@@ -20,10 +19,12 @@ from estimation.measurement_model import MeasurementModel
 from statistics.likelihood_models import GaussianModel
 
 Q = np.diag([0.1])**2  # range error
+R = np.diag([1.0, np.deg2rad(40.0)])**2  # input error
 
 #  Simulation parameter
 Qsim = np.diag([0.2]) ** 2
 Rsim = np.diag([1.0, np.deg2rad(30.0)]) ** 2
+
 
 # RFID positions [x, y]
 RFID = np.array([[10.0, 0.0], [10.0, 10.0],
@@ -40,8 +41,8 @@ class MatrixDescriptor(PFMatrixDescription):
     def __init__(self, **input):
         PFMatrixDescription.__init__(self)
         self.update(**input)
-        cov = np.zeros(shape=(3, 3))
-        self.set_matrix(name="P", item=cov)
+        P = np.eye(4)
+        self.set_matrix(name="P", item=P)
 
     def update(self, **input):
         """
@@ -72,6 +73,7 @@ def calc_input():
 
 
 def randomize_input(u):
+
     """
     Add noise to the given input
     """
@@ -82,6 +84,7 @@ def randomize_input(u):
 
 
 def calculate_importance_weight(w, **kwargs):
+
     """
     Calculate the importance weights
     """
@@ -93,12 +96,12 @@ def calculate_importance_weight(w, **kwargs):
         dy = x[1, 0] - z[i, 2]
         prez = math.sqrt(dx ** 2 + dy ** 2)
         dz = prez - z[i, 0]
-        likelihood = GaussianModel(mu=dz, sigma=math.sqrt(Q[0, 0]))
+        likelihood = GaussianModel(mu=dz, sigma=math.sqrt(Q[0, 0])**2)
         w = w * likelihood()
     return w
 
 
-def calculate_covariance(state_vec, particles, particle_weights ):
+def calculate_covariance(state_vec, particles, particle_weights):
 
     cov = np.zeros(shape=(3, 3))
 
@@ -109,9 +112,11 @@ def calculate_covariance(state_vec, particles, particle_weights ):
 
 
 def motion_model(x, u, mat_descriptor):
+
     F = mat_descriptor.get_matrix(name="F")
     B = mat_descriptor.get_matrix(name="B")
     return F.dot(x) + B.dot(u)
+
 
 def observation(x_true, xd, u, matrix_descriptor):
 
@@ -136,9 +141,9 @@ def observation(x_true, xd, u, matrix_descriptor):
     return x_true, z, xd, ud
 
 
-def plot_covariance_ellipse(xEst, PEst):  # pragma: no cover
+def plot_covariance_ellipse(x_est, P_est):  # pragma: no cover
 
-    Pxy = PEst[0:2, 0:2]
+    Pxy = P_est[0:2, 0:2]
     eigval, eigvec = np.linalg.eig(Pxy)
 
     if eigval[0] >= eigval[1]:
@@ -165,11 +170,13 @@ def plot_covariance_ellipse(xEst, PEst):  # pragma: no cover
     x = [a * math.cos(it) for it in t]
     y = [b * math.sin(it) for it in t]
     angle = math.atan2(eigvec[bigind, 1], eigvec[bigind, 0])
+
     R = np.array([[math.cos(angle), math.sin(angle)],
                   [-math.sin(angle), math.cos(angle)]])
+
     fx = R.dot(np.array([[x, y]]))
-    px = np.array(fx[0, :] + xEst[0, 0]).flatten()
-    py = np.array(fx[1, :] + xEst[1, 0]).flatten()
+    px = np.array(fx[0, :] + x_est[0, 0]).flatten()
+    py = np.array(fx[1, :] + x_est[1, 0]).flatten()
     plt.plot(px, py, "--r")
 
 
@@ -177,7 +184,7 @@ def estimate(data):
 
     x_est = np.zeros(shape=(4, 1))
     x_true = np.zeros(shape=(4, 1))
-    x_dr = np.zeros((4, 1))  # Dead reckoning
+    x_dr = np.zeros(shape=(4, 1))  # Dead reckoning
 
     # history
     hx_est = x_est
@@ -187,13 +194,12 @@ def estimate(data):
     filter = ParticleFilter(state_vec=x_est,
                             num_particles=data["NUM_PARTICLES"],
                             num_resample_particles=data["NUM_RESAMPLE_PARTICLES"],
-                            likelihood_model=GaussianModel(mu=data["MU"], sigma=data["SIGMA"]),
                             motion_model=MotionModel(),
                             measurement_model=MeasurementModel(),
                             mat_desc=MatrixDescriptor(**{"DT": data["DT"], "state":x_est}))
 
     # uniform initialization of the particle weights
-    filter.set_weights(np.zeros(shape=(data["NUM_PARTICLES"], 1), dtype='float') + 1/data["NUM_PARTICLES"])
+    filter.set_weights(np.zeros(shape=(1, data["NUM_PARTICLES"]), dtype='float') + 1/data["NUM_PARTICLES"])
 
     # set the calculators for the weights and the covariance
     filter.set_importance_weights_calculator(calculator=calculate_importance_weight)
@@ -205,8 +211,13 @@ def estimate(data):
         print("\t At step: ", step+1, " of: ", data["STEPS"], "time is: ", time)
 
         x_true, z, xd, u = observation(x_true=x_true, xd=x_dr, u=calc_input(), matrix_descriptor=filter.get_matrix_descriptor())
-        x_est = filter.get_state()
-        filter.iterate(**{"DT":data["DT"], "state":x_est, 'u': u, 'z': z})
+
+        print("\t True state vector is: ", x_true)
+
+        filter.iterate(**{"DT":data["DT"], 'u': u, 'z': z})
+        x_est = filter.state
+
+        print("\t state vector is: ", x_est)
 
         if data["SHOW_ANIMATION"]:
 
@@ -230,7 +241,7 @@ def estimate(data):
             plt.plot(np.array(hx_dr[0, :]).flatten(), np.array(hx_dr[1, :]).flatten(), "-k")
             plt.plot(np.array(hx_est[0, :]).flatten(), np.array(hx_est[1, :]).flatten(), "-r")
 
-            plot_covariance_ellipse(x_est, P)
+            plot_covariance_ellipse(x_est=x_est, P_est=P)
             plt.axis("equal")
 
             plt.grid(True)
