@@ -42,6 +42,8 @@ This is my Python playground...
 
 ### Machine Learning
 
+- <a href="applications/machine_learning/example_1.py">Example 1</a>: K-Nearest Neighbors with ```scikit-learn```
+
 
 ## Useful Links
 
