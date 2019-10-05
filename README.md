@@ -43,6 +43,7 @@ This is my Python playground...
 ### Machine Learning
 
 - <a href="applications/machine_learning/example_1.py">Example 1</a>: K-Nearest Neighbors with ```scikit-learn```
+- <a href="applications/machine_learning/example_2.py">Example 2</a>: Simple 1D Linear Regression with ```scikit-learn```
 
 
 ## Useful Links
