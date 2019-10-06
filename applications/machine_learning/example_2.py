@@ -3,6 +3,7 @@ Category: Machine Learning
 ID: Example 2
 Description: Simple Linear Regression
 Taken From: Code from the book Python Data Science Handbook
+https://jakevdp.github.io/PythonDataScienceHandbook/
 
 Details:
 

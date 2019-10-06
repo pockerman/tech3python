@@ -3,6 +3,7 @@ Category: Machine Learning
 ID: Example 3
 Description: Simple Classification with ```scikit-learn Guassian Naive Bayes```
 Taken From: Code from the book Python Data Science Handbook
+https://jakevdp.github.io/PythonDataScienceHandbook/
 
 Details:
 
