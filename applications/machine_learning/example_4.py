@@ -45,6 +45,7 @@ def main():
     sns.lmplot('PCA1', 'PCA2', hue='species', data=iris, fit_reg=False)
     plt.show()
 
+
 if __name__ == '__main__':
     print("Running Example machine_learning/example_4")
     main()
