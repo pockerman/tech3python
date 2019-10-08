@@ -1,25 +1,17 @@
 """
 Category: Machine Learning
-ID: Example 4
-Description: Reduce dimensionality of Iris data set
+ID: Example 5
+Description: Clustering Iris data set with Gaussian Mixture Models
 Taken From: Code from the book Python Data Science Handbook
 https://jakevdp.github.io/PythonDataScienceHandbook/
 
 Details:
 
-The Iris data set is 4 dimensional. Concretely:
-
-'sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)'
-
-we want to reduce the dimensions of the data set in order to be able to visualize it.
-Dimensionality reduction attempts to lower the dimension of a data set while simultaneously
-retaining the essential features.
-
-Principal Component Analysis or PCA is a dimensionality reduction technique.
-
+TODO: Fill in details about Gaussian Mixture Models
 """
 
 
+from sklearn.mixture import GaussianMixture
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -28,6 +20,7 @@ import seaborn as sns
 def main():
 
     sns.set()
+
     iris = sns.load_dataset('iris')
     X_iris = iris.drop('species', axis=1)
 
@@ -41,11 +34,20 @@ def main():
     iris['PCA1'] = Xiris_2d[:, 0]
     iris['PCA2'] = Xiris_2d[:, 1]
 
-    sns.lmplot('PCA1', 'PCA2', hue='species', data=iris, fit_reg=False)
+    model = GaussianMixture(n_components=3, covariance_type='full')
+
+    #  fit model to data
+    model.fit(X_iris)
+
+    y_gmm = model.predict(X_iris)
+
+    iris['cluster'] = y_gmm
+
+    sns.lmplot('PCA1', 'PCA2', hue='species', col='cluster', data=iris, fit_reg=False)
     plt.show()
 
 
 if __name__ == '__main__':
-    print("Running Example machine_learning/example_4")
+    print("Running Example machine_learning/example_5")
     main()
     print("Done...")

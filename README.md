@@ -48,6 +48,8 @@ This is my Python playground...
 - <a href="applications/machine_learning/example_2.py">Example 2</a>: Simple 1D Linear Regression with ```scikit-learn```
 - <a href="applications/machine_learning/example_3.py">Example 3</a>: Simple Classification with ```scikit-learn Guassian Naive Bayes```
 - <a href="applications/machine_learning/example_4.py">Example 4</a>: Reduce dimensionality of Iris data set
+- <a href="applications/machine_learning/example_5.py">Example 5</a>:  Clustering Iris data set with Gaussian Mixture Models  using ```scikit-learn```
+- <a href="applications/machine_learning/example_6.py">Example 6</a>:  Classifying handwritten digits using ```scikit-learn```
 
 
 ## Useful Links
