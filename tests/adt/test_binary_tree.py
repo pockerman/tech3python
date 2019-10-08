@@ -96,6 +96,7 @@ class BinaryTreeTest(unittest.TestCase):
                     It then deletes one of the leaf nodes
     Expected Output: Deleted node should be removed. 
     """
+
     def test_delete_leaf_node_bfs_traversal(self):
 
         bt = BinaryTree(insert_method=BreadthFirstTreeSearch, search_method=BreadthFirstTreeSearch)
@@ -147,11 +148,12 @@ class BinaryTreeTest(unittest.TestCase):
 
     """
         Test Scenario: Application creates a BinaryTree and adds nodes using BreathFirstTraversal as an insertion policy.
-                            It then deletes one of the nodes that does not have a leaf
+                       It then deletes one of the nodes that does not have a leaf
         Expected Output: Deleted node should be removed and replaced by the left child of the node to be deleted. 
     """
 
     def test_delete_node_and_replace_with_left_child_bfs_traversal(self):
+
         bt = BinaryTree(insert_method=BreadthFirstTreeSearch, search_method=BreadthFirstTreeSearch)
         self.assertEqual(len(bt), 0, msg="Tree size is not empty")
 
@@ -162,10 +164,9 @@ class BinaryTreeTest(unittest.TestCase):
         # now delete the node with value 5
         value = 25
 
-        # this should replace the node with the node having value 26
-        # and make the parent of node with value 26 the node with value 2
-        # and change the parent for the children of node with value 5 to
-        # be the node with value 26
+        # this should replace the node with the node having value 25
+        # with the node havin value 40
+        # The left child of node with value 5 should then have value 40
         success = bt.delete(value=value)
         self.assertTrue(success, msg="Could not remove node with value={0}".format(value))
         self.assertEqual(len(bt), len(values) - 1, msg="Invalid Tree size")
@@ -174,13 +175,12 @@ class BinaryTreeTest(unittest.TestCase):
         value = 40
         node = bt.find(value=value)
         self.assertIsNotNone(node, msg="Node with value={0} should not be None".format(value))
-        self.assertEqual(node.get_parent().value, 2,
-                         msg="Parent value mismatch {0} should be {1}".format(node.get_parent().value, 2))
+        self.assertEqual(node.get_parent().value, 5, msg="Parent value mismatch {0} should be {1}".format(node.get_parent().value, 5))
+
         children = node.get_children()
-        self.assertIsNotNone(children[0], msg="Node with value={0} should not be None".format(25))
-        self.assertEqual(children[0].get_parent(), node,
-                         msg="Node with value={0} should have parent with value {1}".format(25, value))
-        self.assertIsNone(children[1], msg="Right child should be Node")
+        self.assertIsNotNone(children[0], msg="Node with value={0} should not be None".format(19))
+        self.assertEqual(children[0].get_parent(), node, msg="Node with value={0} should have parent with value {1}".format(19, value))
+        self.assertIsNotNone(children[1], msg="Node with value={0} should have parent with value {1}".format(20, value))
 
 
 if __name__ == '__main__':

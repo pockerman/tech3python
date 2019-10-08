@@ -285,36 +285,47 @@ class TreeBase(ADTBase):
                     self._size -= 1
                     return True
                 else:
+
                     # the node to be deleted does not contain a leaf
                     # search for any child that is either a leaf or contains a leaf
+                    # do that recursively
+
+                    def recursively_search_children(children):
+
+                            for child in children:
+                                if child is not None:
+                                    if child.is_leaf() and child.data is not None:
+
+                                        # we found the node to use
+                                        # inform its parent to nullify it
+                                        parent = child.get_parent()
+                                        idx = parent.which_child_am_i(child)
+
+                                        if idx is None:
+                                            raise ValueError("Invalid child id")
+
+                                        parent.set_child(idx, None)
+                                        return True, child
+                                    else:
+                                        return recursively_search_children(child.get_children())
 
                     children = child.get_children()
                     while True:
 
-                        for the_child in children:
+                        rslt, node = recursively_search_children(children=children)
 
-                            if the_child is not None:
-                                if the_child.is_leaf() and the_child.data is not None:
+                        if rslt is True:
 
-                                    # tell the parent that this child died
-                                    child_children = child.get_children()
-                                    parent.set_child(child_idx, None)
-
-                                    for c in child_children:
-                                        c.set_parent(parent=the_child)
-
-                                        for cc in c.get_children():
-                                            if cc is the_child:
-                                                child_idx = c.which_child_am_i()
-                                                c.set_child(child_idx, None)
-                                                break
-
-                                    the_child.set_parent(parent=parent)
-                                    self._size -= 1
-                                    return True
-                                else:
-                                    children = the_child.get_children()
-
+                            # we found a node
+                            node.set_parent(parent=parent)
+                            parent.set_child(child_idx, node)
+                            count = 0
+                            for c in children:
+                                c.set_parent(node)
+                                node.set_child(count, c)
+                                count += 1
+                            self._size -= 1
+                            return rslt
         return False
 
     def _make_root(self, node):
