@@ -20,7 +20,6 @@ Principal Component Analysis or PCA is a dimensionality reduction technique.
 """
 
 
-
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import seaborn as sns
