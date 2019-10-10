@@ -9,6 +9,10 @@ class BinaryTree(TreeBase):
     Models a binary tree
     """
 
+    @staticmethod
+    def n_children_per_node():
+        return 2
+
     def __init__(self, insert_method, search_method):
         TreeBase.__init__(self, insert_method=insert_method, search_method=search_method)
 
