@@ -14,6 +14,8 @@ This is my Python playground...
 - <a href="applications/algorithms/example_5.py">Example 6</a>: Find the index of turning point in a unimodal array
 - <a href="applications/algorithms/example_6.py">Example 6</a>: Find the majority element in an array
 - <a href="applications/algorithms/example_7.py">Example 7</a>: Find the number of digits in a given integer
+- <a href="applications/algorithms/example_8.py">Example 8</a>: Find the edit distance between two strings
+- <a href="applications/algorithms/example_9.py">Example 9</a>: Find the number of ones in the binary representation on an integer 
 
 ### Numerics 
 

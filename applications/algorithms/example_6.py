@@ -2,7 +2,7 @@
 Category: Algorithms
 ID: Example 6
 Description: Find the majority element in an array
-Taken From: Code from the book: Coding Interviews: Questions, Analysis & Solutions
+Taken From: Code from the book Coding Interviews: Questions, Analysis & Solutions
 
 Details:
 
