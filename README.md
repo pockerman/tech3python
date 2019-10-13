@@ -57,6 +57,12 @@ be modified to change ```m``` to ```n```
 - <a href="applications/machine_learning/example_6.py">Example 6</a>:  Classifying handwritten digits using ```scikit-learn```
 
 
+### Quantum Computing
+
+- <a href="applications/quantum_computing/example_1.py">Example 1</a>: Hello World with  ```Qiskit```
+
+
+
 ## Useful Links
 
 - <a href="https://sphinx-rtd-tutorial.readthedocs.io/en/latest/sphinx-quickstart.html">Sphinx Quickstart</a> 
