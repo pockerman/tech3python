@@ -8,6 +8,7 @@ This is my Python playground...
 ### Plotting
 
 - <a href="applications/plotting/example_1.py">Example 1</a>: Plot the Binomial PMF
+- <a href="applications/plotting/example_2.py">Example 2</a>: Plot the Normal PDF
 
 ### Algorithms
 
