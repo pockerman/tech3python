@@ -5,6 +5,10 @@ This is my Python playground...
 
 ## Applications Map
 
+### Plotting
+
+- <a href="applications/plotting/example_1.py">Example 1</a>: Plot the Binomial PMF
+
 ### Algorithms
 
 - <a href="applications/algorithms/example_1.py">Example 1</a>: C3 Algorithm
