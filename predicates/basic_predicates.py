@@ -29,3 +29,8 @@ class HasValue:
 
     def __call__(self, *args, **kwargs):
         return args[0].value == self._value
+
+
+    @property
+    def value(self):
+        return self._value
