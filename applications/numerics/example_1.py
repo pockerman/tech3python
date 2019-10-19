@@ -20,9 +20,6 @@ def f(x):
 
 def main():
 
-    print("=======================================")
-    print("Running numerics/example_1.py example...")
-
     N_ITERATIONS = 100000
     a = 1.0
     b = 3.0
@@ -52,9 +49,8 @@ def main():
         print("Area under curve points: {0}".format(area_under_curve))
         print("Calculated area: {0}".format(REAL_AREA * (area_under_curve / total_area)))
 
-    print("Done...")
-    print("=======================================")
-
 
 if __name__ == '__main__':
+    print("Running Example numerics/example_1")
     main()
+    print("Done...")

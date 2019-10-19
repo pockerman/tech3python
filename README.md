@@ -27,7 +27,8 @@ be modified to change ```m``` to ```n```
 
 ### Numerics 
 
-- <a href="applications/numerics/example_1.py">Monte Carlo integration:</a> Implement a simple Monte Carlo integrator
+- <a href="applications/numerics/example_1.py">Example 1:</a> Implement a simple Monte Carlo integrator
+- <a href="applications/numerics/example_2.py">Example 2:</a> Calculate the area of a circle using  Monte Carlo integration
 
 ### Linear Algebra
 
