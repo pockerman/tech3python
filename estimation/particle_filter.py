@@ -46,20 +46,24 @@ class ParticleFilter(IterativeFilterBase):
     Implements Particle Filter algorithm
     """
 
-    def __init__(self, num_particles, num_resample_particles, state_vec,  motion_model,
-                 measurement_model, mat_desc=PFMatrixDescription()):
+    def __init__(self, state_vec,   mat_desc=PFMatrixDescription()):
 
         IterativeFilterBase.__init__(self, state_vec=state_vec)
 
-        self._num_particles = num_particles
-        self._num_resample_particles = num_resample_particles
-        self._motion_model = motion_model
-        self._measurement_model = measurement_model
         self._mat_desc = mat_desc
-        self._particles = np.zeros(shape=(state_vec.shape[0], num_particles), dtype='float')
-        self._weights = np.zeros(shape=(1, num_particles), dtype='float')
+        self._particles = None
+        self._weights = None
         self._importance_weight_calculator=None
         self._covariance_calculator = None
+
+    def initialize_paricles(self, initializer):
+
+        """
+        Initialize the particles of the filter using the given initializer
+        :param initializer:
+        :return:
+        """
+        self._particles = initializer
 
     def set_importance_weights_calculator(self, calculator):
         """
@@ -127,7 +131,7 @@ class ParticleFilter(IterativeFilterBase):
 
         u = kwargs['u']
 
-        for pidx in range(self._num_particles):
+        for pidx in range(len(self._particles)):
 
             # get the particle weight
             wp = self._weights[0, pidx]
