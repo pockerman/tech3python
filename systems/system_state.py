@@ -13,7 +13,6 @@ class SysState(object):
         for item in entries.keys():
             self._state_data[item] = entries[item]
 
-
         self._state_value = np.zeros(shape=(len(entries), 1), dtype=dtype)
 
 
