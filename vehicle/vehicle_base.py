@@ -7,7 +7,9 @@ class VehicleBase(ABC):
     Base class for modeling a vehicle
     """
 
-    def __init__(self, properties):
+    def __init__(self, state, properties):
+
+        self._state = state
 
         if properties is None:
             self.__properties = dict()
@@ -22,20 +24,10 @@ class VehicleBase(ABC):
         self.__properties[name] = value
 
     @property
-    @abstractmethod
     def state(self):
-        pass
+        return self._state
 
     @state.setter
-    @abstractmethod
     def state(self, value):
-        pass
-
-    @abstractmethod
-    def get_old_state(self, name, idx):
-        pass
-
-    @abstractmethod
-    def set_old_state(self, name, idx, value):
-        pass
+        self._state = value
 
