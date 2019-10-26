@@ -55,6 +55,8 @@ class ParticleFilter(IterativeFilterBase):
         self._weights = None
         self._importance_weight_calculator=None
         self._covariance_calculator = None
+        self._predictor = None
+        self._updater = None
 
     def initialize_paricles(self, initializer):
 
@@ -64,6 +66,30 @@ class ParticleFilter(IterativeFilterBase):
         :return:
         """
         self._particles = initializer
+
+    def initialize_weights(self, weights_initializer):
+        """
+        Initialize the weights
+        :param weights_initializer:
+        :return:
+        """
+        self._weights = weights_initializer
+
+    def set_predictor(self, predictor):
+        """
+        Set the object that will be used for predicting the particles state
+        :param predictor:
+        :return:
+        """
+        self._predictor = predictor
+
+    def set_updater(self, updater):
+        """
+        Set the object that will be used for predicting the particles state
+        :param predictor:
+        :return:
+        """
+        self._updater = updater
 
     def set_importance_weights_calculator(self, calculator):
         """
@@ -129,26 +155,7 @@ class ParticleFilter(IterativeFilterBase):
 
     def predict(self, **kwargs):
 
-        u = kwargs['u']
-
-        for pidx in range(len(self._particles)):
-
-            # get the particle weight
-            wp = self._weights[0, pidx]
-
-            # calculate state vector from motion model
-            state_vec = self._motion_model(self.previous_state_vector, self._mat_desc["F"], self._mat_desc["B"], u)
-
-            kwargs['state'] = state_vec
-            wp = self._importance_weight_calculator(wp, **kwargs)
-            self._particles[:, pidx] = state_vec[:, 0]
-            self._weights[0, pidx] = wp
-
-        self.normalize_weights(**kwargs)
-
-        state_vec = self._particles.dot(self._weights.T)
-        self._mat_desc["P"] = self._covariance_calculator(state_vec, self._particles, self._weights)
-        self.state = state_vec
+        self._particles = self._predictor(self._particles, **kwargs)
 
     def update(self, **kwargs):
 
@@ -156,25 +163,7 @@ class ParticleFilter(IterativeFilterBase):
         Update the estimate. Essentially performs the resampling step
         meaning that a new set of particles and particle weights is generated
         """
-
-        Neff = 1.0 / (self._weights.dot(self._weights.T))[0, 0]  # Effective particle number
-        NP = self._num_particles
-        NTh = self._num_resample_particles
-
-        if Neff < NTh:
-            wcum = np.cumsum(self._weights)
-            base = np.cumsum(self._weights * 0.0 + 1 / NP) - 1 / NP
-            resampleid = base + np.random.rand(base.shape[0]) / NP
-
-            inds = []
-            ind = 0
-            for ip in range(NP):
-                while resampleid[ip] > wcum[ind]:
-                    ind += 1
-                inds.append(ind)
-
-            self._particles = self._particles[:, inds]
-            self._weights = np.zeros((1, NP)) + 1.0 / NP  # init weight
+        self._weights = self._updater(self._particles, self._weights, **kwargs)
 
     def iterate(self, **kwargs):
         """
