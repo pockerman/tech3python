@@ -39,7 +39,8 @@ be modified to change ```m``` to ```n```
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_3.py">Example 3</a>: Vanilla bootstrap for the mean
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_4.py">Example 4</a>: Vanilla bootstrap for skewness
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_5.py">Example 5</a>: 1D Linear Regression
-- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_7.py">Example 7</a>: Almost sure convergence 
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_7.py">Example 7</a>: Almost sure convergence
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_8.py">Example 8</a>:  Simulate the standard error for the mean is ```1/sqrt(n)``` 
 
 
 ### Estimation
@@ -61,6 +62,7 @@ be modified to change ```m``` to ```n```
 - <a href="applications/machine_learning/example_4.py">Example 4</a>: Reduce dimensionality of Iris data set
 - <a href="applications/machine_learning/example_5.py">Example 5</a>:  Clustering Iris data set with Gaussian Mixture Models  using ```scikit-learn```
 - <a href="applications/machine_learning/example_6.py">Example 6</a>:  Classifying handwritten digits using ```scikit-learn```
+- <a href="applications/machine_learning/example_8.py">Example 8</a>:  CNN with Pytorch
 
 
 ### Quantum Computing
