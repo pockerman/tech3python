@@ -44,7 +44,8 @@ be modified to change ```m``` to ```n```
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_4.py">Example 4</a>: Vanilla bootstrap for skewness
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_5.py">Example 5</a>: 1D Linear Regression
 - <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_7.py">Example 7</a>: Almost sure convergence
-- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_8.py">Example 8</a>:  Simulate the standard error for the mean is ```sigma/sqrt(n)``` 
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_8.py">Example 8</a>:  Simulate the standard error for the mean is ```sigma/sqrt(n)```
+- <a href="https://github.com/pockerman/tech3python/blob/master/applications/statistics/example_9.py">Example 9</a>:  Basic description for Iris dataset
 
 
 ### Estimation
