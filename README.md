@@ -9,6 +9,10 @@ This is my Python playground...
 
 - <a href="applications/plotting/example_1.py">Example 1</a>: Plot the Binomial PMF
 - <a href="applications/plotting/example_2.py">Example 2</a>: Plot the Normal PDF
+- <a href="applications/plotting/example_3.py">Example 3</a>: Create a simple scatter plot
+- <a href="applications/plotting/example_4.py">Example 4</a>: Create a simple histogram plot
+- <a href="applications/plotting/example_5.py">Example 5</a>: Two scatter plots within a figure
+- <a href="applications/plotting/example_6.py">Example 6</a>: Pair plots with ```seaborn```
 
 ### Algorithms
 
