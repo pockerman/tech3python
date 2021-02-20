@@ -250,14 +250,14 @@ def estimate(data):
 
 def main():
 
-    print("=======================================")
-    print("Running Particle Filtering example...")
+
     with open("particle_filtering_data.json", 'r') as f:
         data = json.load(f)
         estimate(data)
-    print("Done...")
-    print("=======================================")
-
 
 if __name__ == '__main__':
+    print("=======================================")
+    print("Running Example  estimation/example_4")
     main()
+    print("Done...")
+    print("=======================================")
