@@ -1,8 +1,7 @@
-from ode_integrators.ode_integrator_base import ODEIntegratorBase
+from systems.integrator import IntegratorBase
 
 
-class ODEScalarFWDEuler(ODEIntegratorBase):
-
+class ODEScalarFWDEuler(IntegratorBase):
 
     @staticmethod
     def create(**kwargs):
@@ -13,31 +12,29 @@ class ODEScalarFWDEuler(ODEIntegratorBase):
         return "SCALAR_FWD_EULER"
 
     def __init__(self, **kwargs):
-        ODEIntegratorBase.__init__(self, **kwargs)
-        self.history_size = 1
+
+        IntegratorBase.__init__(self, **kwargs)
 
         if 'init_condition' in kwargs.keys():
             self.update_history(0, kwargs['init_condition'] )
 
-    def execute(self, **kwargs):
+    def execute(self, **input):
 
         # get the callable to calculate the rhs
         if self.has_rhs_func():
             f = self.rhs_func
-        elif 'f' in kwargs.keys():
-            f = kwargs['f']
+        elif 'f' in input.keys():
+            f = input['f']
         else:
             raise ValueError("Right hand side function has not been defined")
 
         yn = self.get_history(0)
-        new = yn + self.step_size*f(**kwargs)
+        new = yn + self.step_size*f(**input)
         yn = new
         self.update_history(0, yn)
         return new
 
-
-class ODEVectorFWDEuler(ODEIntegratorBase):
-
+class ODEVectorFWDEuler(IntegratorBase):
 
     @staticmethod
     def create(**kwargs):
@@ -48,28 +45,27 @@ class ODEVectorFWDEuler(ODEIntegratorBase):
         return "VECTOR_FWD_EULER"
 
     def __init__(self, **kwargs):
-        ODEIntegratorBase.__init__(self, **kwargs)
-        self.history_size = 1
+        IntegratorBase.__init__(self, **kwargs)
 
         if 'init_condition' in kwargs.keys():
             self.update_history(0, kwargs['init_condition'] )
 
-    def execute(self, **kwargs):
+    def execute(self, **input):
 
-        # get the callable to calculate the rhs
         # get the callable to calculate the rhs
         if self.has_rhs_func():
             f = self.rhs_func
-        elif 'f' in kwargs.keys():
-            f = kwargs['f']
+        elif 'f' in input.keys():
+            f = input['f']
         else:
             raise ValueError("Right hand side function has not been defined")
 
         yn = self.get_history(0)
-        new = yn + self.step_size*f(**kwargs)
+        new = yn + self.step_size*f(**input)
         yn = new
         self.update_history(0, yn)
         return new
+
 
 
 
